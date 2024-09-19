@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599982120296",
+    "project_id": "statistic-practice",
+    "storage_bucket": "statistic-practice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599982120296:android:efb482794328d359aacadd",
+        "android_client_info": {
+          "package_name": "com.core.venturo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmbPDL_zY71CmOfuDIcln3eZCHYY6FoPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
