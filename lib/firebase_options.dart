@@ -50,19 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAmbPDL_zY71CmOfuDIcln3eZCHYY6FoPw',
-    appId: '1:599982120296:android:efb482794328d359aacadd',
-    messagingSenderId: '599982120296',
-    projectId: 'statistic-practice',
-    storageBucket: 'statistic-practice.appspot.com',
+    apiKey: 'AIzaSyChMOywDRHLgf6QW3Cve-9DZPwuzBcsRC8',
+    appId: '1:1073563896796:android:9391b78d50e03368181d19',
+    messagingSenderId: '1073563896796',
+    projectId: 'skripsi4-1fdd9',
+    databaseURL: 'https://skripsi4-1fdd9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'skripsi4-1fdd9.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBAa0k5FUFvkjX9L0osFw597sHO1PqA0dM',
-    appId: '1:599982120296:ios:cc06ac136e51bbe3aacadd',
-    messagingSenderId: '599982120296',
-    projectId: 'statistic-practice',
-    storageBucket: 'statistic-practice.appspot.com',
+    apiKey: 'AIzaSyC8YTSJ_ovXpW3eVDSImAI-6jjI2ilrEGo',
+    appId: '1:1073563896796:ios:6c0caed3d136c067181d19',
+    messagingSenderId: '1073563896796',
+    projectId: 'skripsi4-1fdd9',
+    databaseURL: 'https://skripsi4-1fdd9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'skripsi4-1fdd9.appspot.com',
     iosBundleId: 'com.core.venturo',
   );
 }

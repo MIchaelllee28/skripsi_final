@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "599982120296",
-    "project_id": "statistic-practice",
-    "storage_bucket": "statistic-practice.appspot.com"
+    "project_number": "1073563896796",
+    "firebase_url": "https://skripsi4-1fdd9-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "skripsi4-1fdd9",
+    "storage_bucket": "skripsi4-1fdd9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:599982120296:android:efb482794328d359aacadd",
+        "mobilesdk_app_id": "1:1073563896796:android:9391b78d50e03368181d19",
         "android_client_info": {
           "package_name": "com.core.venturo"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAmbPDL_zY71CmOfuDIcln3eZCHYY6FoPw"
+          "current_key": "AIzaSyChMOywDRHLgf6QW3Cve-9DZPwuzBcsRC8"
         }
       ],
       "services": {
