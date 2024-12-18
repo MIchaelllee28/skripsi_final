@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trainee/modules/features/counter/controllers/splash_controller.dart';
+import 'package:trainee/modules/features/splash_screen/controllers/splash_controller.dart';
 import 'package:trainee/configs/themes/main_color.dart';
 
 class SplashScreenView extends StatelessWidget {
@@ -20,7 +20,7 @@ class SplashScreenView extends StatelessWidget {
             ),
           ),
           child: Center(
-            child: Image.asset('lib/assets/images/java_code.png'),
+            child: Image.asset('lib/assets/images/auth/java_code.png'),
           ),
         ),
       ),

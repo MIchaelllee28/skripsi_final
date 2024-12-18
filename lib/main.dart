@@ -8,6 +8,7 @@ import 'package:trainee/configs/themes/main_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:trainee/modules/global_binddings/global_bindings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,10 +38,11 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           title: 'Trainee Sekeleton',
           debugShowCheckedModeBanner: false,
-          initialRoute: MainRoute.iot,
+          initialRoute: MainRoute.splash,
           theme: mainTheme,
           defaultTransition: Transition.native,
           getPages: MainPage.main,
+          initialBinding: GlobalBindings(),
         );
       },
     );

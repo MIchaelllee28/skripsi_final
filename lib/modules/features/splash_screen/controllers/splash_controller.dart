@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:trainee/modules/features/counter/views/ui/conter_view.dart';
+import 'package:trainee/configs/routes/main_route.dart';
 
 class SplashController extends GetxController {
   @override
@@ -9,7 +9,11 @@ class SplashController extends GetxController {
   }
 
   Future navigateToMain() async {
-    await Future.delayed(const Duration(seconds: 2));
-    Get.to(() => const ConterView());
+    await Future.delayed(
+      const Duration(
+        seconds: 2,
+      ),
+    );
+    Get.toNamed(MainRoute.home);
   }
 }
