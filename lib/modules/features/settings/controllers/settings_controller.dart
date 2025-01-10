@@ -78,12 +78,11 @@ class SettingsController extends GetxController {
   //reset local and api data
 
   Future<void> reset() async {
-    await HiveService.to.clearAll();
-
     // reset every data to be unowned (status : 0)
-    for (var i = 0; i < 20; i++) {
+    for (var i = 1; i < 16; i++) {
       await DioService.dioCall().put('Shop_items/$i', data: {'status': 0});
     }
+    await HiveService.to.clearAll();
     //reinit the items
     onInit();
   }
