@@ -6,7 +6,6 @@ final ThemeData mainTheme = ThemeData(
   primaryColor: MainColor.primary,
   brightness: Brightness.light,
   colorScheme: ColorScheme.fromSwatch(
-    primaryColorDark: MainColor.primary,
     accentColor: MainColor.primary,
     cardColor: MainColor.white,
     errorColor: MainColor.danger,

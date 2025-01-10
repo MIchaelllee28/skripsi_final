@@ -34,47 +34,25 @@ class ShopBodyMusik extends StatelessWidget {
                 ),
               ],
             ),
-            child: Stack(
-              children: [
-                // Gradient Background
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.white,
-                          Colors.green.shade50,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Ribbon Placeholder (Top Left) - ORIGINAL DESIGN
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    color: Colors.transparent,
-                    child: Image.asset(
-                      'lib/assets/images/shop/pita.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-
+            child:
                 // Main Content
                 ShopController.to.musikItems.isEmpty
                     ? const CircularProgressIndicator()
                     : Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 40),
+                          // Ribbon Placeholder (Top Left) - ORIGINAL DESIGN
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              color: Colors.transparent,
+                              child: Image.asset(
+                                'lib/assets/images/shop/pita.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                           // Product Image
                           Expanded(
                             child: Padding(
@@ -108,64 +86,61 @@ class ShopBodyMusik extends StatelessWidget {
                           ),
 
                           // Price Tag
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Coin/Price Icon
-                                Icon(
-                                  Icons.monetization_on_rounded,
-                                  color: Colors.green.shade800,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 6),
-                                Obx(
-                                  () => Text(
-                                    ShopController.to.musikItems.isEmpty
-                                        ? '0'
-                                        : ShopController
-                                            .to.musikItems[index]['harga']
-                                            .toString(),
-                                    style: TextStyle(
-                                      color: Colors.green.shade900,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                          GestureDetector(
+                            onTap: () {
+                              ShopController.to.buyItem(
+                                  ShopController.to.musikItems[index]['id']);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Coin/Price Icon
+                                  Icon(
+                                    Icons.monetization_on_rounded,
+                                    color: Colors.green.shade800,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Obx(
+                                    () => Text(
+                                      ShopController.to.musikItems.isEmpty
+                                          ? '0'
+                                          : ShopController.to.musikItems[index]
+                                                      ['status'] ==
+                                                  1
+                                              ? 'Owned'
+                                              : ShopController
+                                                  .to.musikItems[index]['harga']
+                                                  .toString(),
+                                      style: TextStyle(
+                                        color: Colors.green.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
-
-                // Subtle Ripple Effect
-                Positioned.fill(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15),
-                      splashColor: Colors.green.shade100.withOpacity(0.3),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         );
       },

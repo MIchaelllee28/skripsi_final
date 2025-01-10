@@ -31,124 +31,92 @@ class ShopBodyPot extends StatelessWidget {
               ),
             ],
           ),
-          child: Stack(
+          child: Column(
             children: [
-              // Gradient Background
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white,
-                        Colors.green.shade50,
-                      ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'lib/assets/images/shop/pita.png',
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
-
-              // Ribbon Placeholder (Top Left) - ORIGINAL DESIGN
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.transparent,
-                  child: Image.asset(
-                    'lib/assets/images/shop/pita.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-
-              // Main Content
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 45),
-                  // Product Image
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Obx(
-                          () => ShopController.to.potItems.isEmpty
-                              ? const CircularProgressIndicator()
-                              : Hero(
-                                  tag: 'pot_$index',
-                                  child: CachedNetworkImage(
-                                    imageUrl: ShopController.to.potItems[index]
-                                        ['image'],
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => Icon(
-                                        Icons.error,
-                                        color: Colors.red.shade300),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Price Tag
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Coin/Price Icon
-                        Icon(
-                          Icons.monetization_on_rounded,
-                          color: Colors.green.shade800,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 6),
-                        Obx(
-                          () => Text(
-                            ShopController.to.potItems.isEmpty
-                                ? '0'
-                                : ShopController.to.potItems[index]['harga']
-                                    .toString(),
-                            style: TextStyle(
-                              color: Colors.green.shade900,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+              // Product Image
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Obx(
+                    () => ShopController.to.potItems.isEmpty
+                        ? const CircularProgressIndicator()
+                        : Hero(
+                            tag: 'pot_$index',
+                            child: CachedNetworkImage(
+                              height: 120,
+                              imageUrl: ShopController.to.potItems[index]
+                                  ['image'],
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error, color: Colors.red.shade300),
+                              fit: BoxFit.contain,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
                   ),
-                ],
+                ),
               ),
 
-              // Subtle Ripple Effect
-              Positioned.fill(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    splashColor: Colors.green.shade100.withOpacity(0.3),
+              // Price Tag
+              GestureDetector(
+                onTap: () {
+                  ShopController.to
+                      .buyItem(ShopController.to.potItems[index]['id']);
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade100,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.monetization_on_rounded,
+                        color: Colors.green.shade800,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Obx(
+                        () => Text(
+                          ShopController.to.potItems.isEmpty
+                              ? '0'
+                              : ShopController.to.potItems[index]['status'] == 1
+                                  ? 'Owned'.toString()
+                                  : ShopController.to.potItems[index]['harga']
+                                      .toString(),
+                          style: TextStyle(
+                            color: Colors.green.shade900,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

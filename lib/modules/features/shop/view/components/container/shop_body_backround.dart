@@ -27,7 +27,11 @@ class ShopBodyBackround extends StatelessWidget {
                   )
                 : Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: ShopController.to.backroundItems.isEmpty
+                          ? Colors.red
+                          : ShopController.to.parseBackgroundColor(
+                              ShopController.to.backroundItems[index]
+                                  ['deskripsi']),
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
@@ -38,26 +42,11 @@ class ShopBodyBackround extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Stack(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Gradient Background
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: ShopController.to.backroundItems.isEmpty
-                                  ? Colors.red
-                                  : ShopController.to.parseBackgroundColor(
-                                      ShopController.to.backroundItems[index]
-                                          ['deskripsi']),
-                            ),
-                          ),
-                        ),
-
-                        // Ribbon Placeholder (Top Left)
-                        Positioned(
-                          top: 0,
-                          left: 0,
+                        Align(
+                          alignment: Alignment.topLeft,
                           child: Container(
                             width: 50,
                             height: 50,
@@ -68,97 +57,84 @@ class ShopBodyBackround extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 100,
+                        ),
+                        // Background Name
+                        Obx(
+                          () => Text(
+                            ShopController.to.backroundItems.isEmpty
+                                ? 'Loading...'
+                                : ShopController.to.backroundItems[index]
+                                        ['nama'] ??
+                                    'Background',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 10.0,
+                                  color: Colors.black54,
+                                  offset: Offset(2.0, 2.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
 
-                        // Main Content
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        const SizedBox(height: 20),
+
+                        // Price Tag
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade100,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Background Name
+                              // Coin/Price Icon
+                              Icon(
+                                Icons.monetization_on_rounded,
+                                color: Colors.green.shade800,
+                                size: 30,
+                              ),
+                              const SizedBox(width: 10),
                               Obx(
                                 () => Text(
                                   ShopController.to.backroundItems.isEmpty
-                                      ? 'Loading...'
+                                      ? '0'
                                       : ShopController.to.backroundItems[index]
-                                              ['nama'] ??
-                                          'Background',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
+                                                  ['status'] ==
+                                              1
+                                          ? 'Owned'
+                                          : ShopController
+                                              .to.backroundItems[index]['harga']
+                                              .toString(),
+                                  style: TextStyle(
+                                    color: Colors.green.shade900,
                                     fontWeight: FontWeight.bold,
-                                    shadows: [
-                                      Shadow(
-                                        blurRadius: 10.0,
-                                        color: Colors.black54,
-                                        offset: Offset(2.0, 2.0),
-                                      ),
-                                    ],
+                                    fontSize: 24,
                                   ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Price Tag
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.shade100,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Coin/Price Icon
-                                    Icon(
-                                      Icons.monetization_on_rounded,
-                                      color: Colors.green.shade800,
-                                      size: 30,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Obx(
-                                      () => Text(
-                                        ShopController.to.potItems.isEmpty
-                                            ? '0'
-                                            : ShopController
-                                                .to.potItems[index]['harga']
-                                                .toString(),
-                                        style: TextStyle(
-                                          color: Colors.green.shade900,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-
-                        // Subtle Ripple Effect
-                        Positioned.fill(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(15),
-                              splashColor:
-                                  Colors.green.shade100.withOpacity(0.3),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
+
+                    // Subtle Ripple Effect
                   ),
           );
         },

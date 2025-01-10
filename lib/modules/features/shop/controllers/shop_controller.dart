@@ -4,6 +4,7 @@ import 'package:trainee/modules/features/shop/view/components/container/shop_bod
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_pot.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:trainee/utils/services/hive_service.dart';
 
 class ShopController extends GetxController {
   static ShopController get to => Get.find();
@@ -42,10 +43,21 @@ class ShopController extends GetxController {
         shopItems.where((items) => items['kategori'] == 'background').toList();
   }
 
-  Future<void> updateItemStatus(int itemId) async {
+  Future<void> buyItem(String itemId) async {
     try {
       // Update item status in the API
-      await DioService.dioCall().put('Shop_items/$itemId', data: {'status': 1});
+      var response = await DioService.dioCall()
+          .put('Shop_items/$itemId', data: {'status': 1});
+
+      // Get items to save
+      var itemToSave = shopItems.firstWhere((item) => item['id'] == itemId);
+
+      // Get existing items
+      List existingItems = HiveService.to.read('shopItems') ?? [];
+      existingItems.add(itemToSave);
+
+      // Save updated list
+      HiveService.to.save('shopItems', existingItems);
 
       // Refetch all items to refresh the lists
       await fetchShopItems();
