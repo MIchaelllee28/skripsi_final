@@ -112,7 +112,7 @@ class SettingsMenu extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Backround : Green Forrest",
+                              "Background : Green Forrest",
                               style: GoogleFonts.caveatBrush(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,

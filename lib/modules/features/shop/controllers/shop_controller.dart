@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:trainee/modules/features/shop/view/components/container/shop_body_backround.dart';
+import 'package:trainee/modules/features/shop/view/components/container/shop_body_background.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_musik.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_pot.dart';
 import 'package:trainee/utils/services/dio_service.dart';
@@ -13,7 +13,7 @@ class ShopController extends GetxController {
   RxList<dynamic> shopItems = [].obs;
   RxList<dynamic> potItems = [].obs;
   RxList<dynamic> musikItems = [].obs;
-  RxList<dynamic> backroundItems = [].obs;
+  RxList<dynamic> backgroundItems = [].obs;
 
   RxList<String> shopChip = [
     "Pot",
@@ -39,7 +39,7 @@ class ShopController extends GetxController {
     musikItems.value =
         shopItems.where((items) => items['kategori'] == 'musik').toList();
 
-    backroundItems.value =
+    backgroundItems.value =
         shopItems.where((items) => items['kategori'] == 'background').toList();
   }
 
@@ -83,7 +83,7 @@ class ShopController extends GetxController {
       case 1:
         return const ShopBodyMusik();
       case 2:
-        return const ShopBodyBackround();
+        return const ShopBodyBackground();
       default:
         return const ShopBodyPot();
     }

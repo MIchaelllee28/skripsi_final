@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trainee/modules/features/shop/controllers/shop_controller.dart';
 
-class ShopBodyBackround extends StatelessWidget {
-  const ShopBodyBackround({super.key});
+class ShopBodyBackground extends StatelessWidget {
+  const ShopBodyBackground({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +20,17 @@ class ShopBodyBackround extends StatelessWidget {
         itemCount: 3,
         itemBuilder: (context, index) {
           return Obx(
-            () => ShopController.to.backroundItems.isEmpty
+            () => ShopController.to.backgroundItems.isEmpty
                 ? const CircularProgressIndicator(
                     strokeWidth: 1,
                     value: 4,
                   )
                 : Container(
                     decoration: BoxDecoration(
-                      color: ShopController.to.backroundItems.isEmpty
+                      color: ShopController.to.backgroundItems.isEmpty
                           ? Colors.red
                           : ShopController.to.parseBackgroundColor(
-                              ShopController.to.backroundItems[index]
+                              ShopController.to.backgroundItems[index]
                                   ['deskripsi']),
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
@@ -63,9 +63,9 @@ class ShopBodyBackround extends StatelessWidget {
                         // Background Name
                         Obx(
                           () => Text(
-                            ShopController.to.backroundItems.isEmpty
+                            ShopController.to.backgroundItems.isEmpty
                                 ? 'Loading...'
-                                : ShopController.to.backroundItems[index]
+                                : ShopController.to.backgroundItems[index]
                                         ['nama'] ??
                                     'Background',
                             style: const TextStyle(
@@ -89,7 +89,7 @@ class ShopBodyBackround extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             ShopController.to.buyItem(
-                                ShopController.to.backroundItems[index]['id']);
+                                ShopController.to.backgroundItems[index]['id']);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -117,15 +117,15 @@ class ShopBodyBackround extends StatelessWidget {
                                 const SizedBox(width: 10),
                                 Obx(
                                   () => Text(
-                                    ShopController.to.backroundItems.isEmpty
+                                    ShopController.to.backgroundItems.isEmpty
                                         ? '0'
                                         : ShopController.to
-                                                        .backroundItems[index]
+                                                        .backgroundItems[index]
                                                     ['status'] ==
                                                 1
                                             ? 'Owned'
                                             : ShopController.to
-                                                .backroundItems[index]['harga']
+                                                .backgroundItems[index]['harga']
                                                 .toString(),
                                     style: TextStyle(
                                       color: Colors.green.shade900,
