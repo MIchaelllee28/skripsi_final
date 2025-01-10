@@ -32,7 +32,10 @@ class SettingsDropdown extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'change',
+                keyDrop == 'language'
+                    ? 'English'
+                    : SettingsController.to.selectedItem[keyDrop]['name'] ??
+                        'loading...',
                 style: TextStyle(color: Colors.grey[600]),
               ),
               IconButton(
@@ -55,7 +58,9 @@ class SettingsDropdown extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(options[index]['nama']),
-                onTap: () {},
+                onTap: () {
+                  SettingsController.to.selectItems(index, options, keyDrop);
+                },
               );
             },
           ),

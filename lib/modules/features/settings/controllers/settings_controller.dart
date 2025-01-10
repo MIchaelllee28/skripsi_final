@@ -1,5 +1,6 @@
 // settings_controller.dart
 import 'package:get/get.dart';
+import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
 
 class SettingsController extends GetxController {
@@ -9,6 +10,8 @@ class SettingsController extends GetxController {
   RxList<dynamic> potOwned = [].obs;
   RxList<dynamic> musicOwned = [].obs;
   RxList<dynamic> backgroundOwned = [].obs;
+
+  RxMap selectedItem = {}.obs;
 
   RxMap<String, bool> dropDown = {
     'language': false,
@@ -20,6 +23,8 @@ class SettingsController extends GetxController {
   @override
   void onInit() async {
     itemsOwned.value = await HiveService.to.read('shopItems') ?? [].obs;
+    selectedItem.value =
+        await HiveService.to.selectedBox.get('selectedItems') ?? {}.obs;
     initItems();
     super.onInit();
   }
@@ -48,5 +53,38 @@ class SettingsController extends GetxController {
         dropDown['background'] = !dropDown['background']!;
         break;
     }
+  }
+
+  // save selected item
+
+  Future<void> selectItems(int index, List items, String keyDrop) async {
+    // First, get existing selected items or create new map if none exists
+    Map selectedItems =
+        await HiveService.to.selectedBox.get('selectedItems') ?? {};
+
+    // Update only the specific key
+    selectedItems[keyDrop] = {
+      'name': items[index]['nama'],
+      'id': items[index]['id'],
+      'deskripsi': items[index]['deskripsi'],
+    };
+
+    // Save the updated map back to Hive
+    await HiveService.to.selectedBox.put('selectedItems', selectedItems);
+    selectedItem.value = selectedItems;
+    dropDownMenu(keyDrop);
+  }
+
+  //reset local and api data
+
+  Future<void> reset() async {
+    await HiveService.to.clearAll();
+
+    // reset every data to be unowned (status : 0)
+    for (var i = 0; i < 20; i++) {
+      await DioService.dioCall().put('Shop_items/$i', data: {'status': 0});
+    }
+    //reinit the items
+    onInit();
   }
 }

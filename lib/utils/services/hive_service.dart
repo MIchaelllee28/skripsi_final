@@ -4,11 +4,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 class HiveService extends GetxService {
   static HiveService get to => Get.find();
   late Box box;
+  late Box selectedBox;
 
   @override
   void onInit() async {
     await Hive.initFlutter();
     box = await Hive.openBox('shopItems');
+    selectedBox = await Hive.openBox('selectedItems');
     super.onInit();
   }
 
@@ -30,6 +32,7 @@ class HiveService extends GetxService {
   // Clear all data
   Future<void> clearAll() async {
     await box.clear();
+    await selectedBox.clear();
   }
 }
 
