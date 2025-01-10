@@ -86,55 +86,60 @@ class ShopBodyBackround extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         // Price Tag
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade100,
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Coin/Price Icon
-                              Icon(
-                                Icons.monetization_on_rounded,
-                                color: Colors.green.shade800,
-                                size: 30,
-                              ),
-                              const SizedBox(width: 10),
-                              Obx(
-                                () => Text(
-                                  ShopController.to.backroundItems.isEmpty
-                                      ? '0'
-                                      : ShopController.to.backroundItems[index]
-                                                  ['status'] ==
-                                              1
-                                          ? 'Owned'
-                                          : ShopController
-                                              .to.backroundItems[index]['harga']
-                                              .toString(),
-                                  style: TextStyle(
-                                    color: Colors.green.shade900,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
+                        GestureDetector(
+                          onTap: () {
+                            ShopController.to.buyItem(
+                                ShopController.to.backroundItems[index]['id']);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade100,
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Coin/Price Icon
+                                Icon(
+                                  Icons.monetization_on_rounded,
+                                  color: Colors.green.shade800,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 10),
+                                Obx(
+                                  () => Text(
+                                    ShopController.to.backroundItems.isEmpty
+                                        ? '0'
+                                        : ShopController.to
+                                                        .backroundItems[index]
+                                                    ['status'] ==
+                                                1
+                                            ? 'Owned'
+                                            : ShopController.to
+                                                .backroundItems[index]['harga']
+                                                .toString(),
+                                    style: TextStyle(
+                                      color: Colors.green.shade900,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    // Subtle Ripple Effect
                   ),
           );
         },
