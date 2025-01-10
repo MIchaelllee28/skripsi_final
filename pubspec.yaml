@@ -41,6 +41,12 @@ dependencies:
   firebase_core: 
   firebase_analytics: ^10.8.0
   firebase_database: ^10.4.0
+  sidebarx: ^0.17.1
+  firebase_auth: 
+  connectivity_plus: ^5.0.2
+  dio: ^5.7.0
+  flutter_widget_from_html: ^0.14.11
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -63,10 +69,23 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+    
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/images/java_code.png
+    - lib/assets/images/auth/
+    - lib/assets/images/mainmenu/
+    - lib/assets/images/iot/app_bar/
+    - lib/assets/images/iot/bottom_bar/
+    - lib/assets/images/iot/buttons/
+    - lib/assets/images/iot/main_part/
+    - lib/assets/images/tutorial/
+    - lib/assets/images/trophy/
+    - lib/assets/images/trophy/buttons/
+    - lib/assets/images/shop/
+    
+
+
+  
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
