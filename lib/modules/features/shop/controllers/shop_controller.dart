@@ -46,8 +46,7 @@ class ShopController extends GetxController {
   Future<void> buyItem(String itemId) async {
     try {
       // Update item status in the API
-      var response = await DioService.dioCall()
-          .put('Shop_items/$itemId', data: {'status': 1});
+      await DioService.dioCall().put('Shop_items/$itemId', data: {'status': 1});
 
       // Get items to save
       var itemToSave = shopItems.firstWhere((item) => item['id'] == itemId);

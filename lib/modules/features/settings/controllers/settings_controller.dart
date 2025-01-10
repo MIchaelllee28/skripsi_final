@@ -1,57 +1,51 @@
 // settings_controller.dart
 import 'package:get/get.dart';
+import 'package:trainee/utils/services/hive_service.dart';
 
 class SettingsController extends GetxController {
-  // Language settings
-  final RxString selectedLanguage = 'English'.obs;
-  final RxBool isLanguageExpanded = false.obs;
+  static SettingsController get to => Get.find();
 
-  // Pot Skin settings
-  final RxString selectedPotSkin = 'Classic'.obs;
-  final RxBool isPotSkinExpanded = false.obs;
+  RxList<dynamic> itemsOwned = [].obs;
+  RxList<dynamic> potOwned = [].obs;
+  RxList<dynamic> musicOwned = [].obs;
+  RxList<dynamic> backgroundOwned = [].obs;
 
-  // Background settings
-  final RxString selectedBackground = 'Default'.obs;
-  final RxBool isBackgroundExpanded = false.obs;
+  RxMap<String, bool> dropDown = {
+    'language': false,
+    'pot': false,
+    'music': false,
+    'background': false,
+  }.obs;
 
-  // Music settings
-  final RxString selectedMusic = 'Calm'.obs;
-  final RxBool isMusicExpanded = false.obs;
-
-  void toggleExpand(String setting) {
-    switch (setting) {
-      case 'language':
-        isLanguageExpanded.value = !isLanguageExpanded.value;
-        break;
-      case 'potSkin':
-        isPotSkinExpanded.value = !isPotSkinExpanded.value;
-        break;
-      case 'background':
-        isBackgroundExpanded.value = !isBackgroundExpanded.value;
-        break;
-      case 'music':
-        isMusicExpanded.value = !isMusicExpanded.value;
-        break;
-    }
+  @override
+  void onInit() async {
+    itemsOwned.value = await HiveService.to.read('shopItems') ?? [].obs;
+    initItems();
+    super.onInit();
   }
 
-  void selectOption(String setting, String option) {
-    switch (setting) {
-      case 'language':
-        selectedLanguage.value = option;
-        isLanguageExpanded.value = false;
+  Future<void> initItems() async {
+    potOwned.value =
+        itemsOwned.where((item) => item['kategori'] == 'pot').toList();
+    musicOwned.value =
+        itemsOwned.where((item) => item['kategori'] == 'musik').toList();
+    backgroundOwned.value =
+        itemsOwned.where((item) => item['kategori'] == 'background').toList();
+  }
+
+  void dropDownMenu(String keyDrop) {
+    switch (keyDrop) {
+      case 'languange':
+        dropDown['language'] = !dropDown['language']!;
         break;
-      case 'potSkin':
-        selectedPotSkin.value = option;
-        isPotSkinExpanded.value = false;
-        break;
-      case 'background':
-        selectedBackground.value = option;
-        isBackgroundExpanded.value = false;
+      case 'pot':
+        dropDown['pot'] = !dropDown['pot']!;
         break;
       case 'music':
-        selectedMusic.value = option;
-        isMusicExpanded.value = false;
+        dropDown['music'] = !dropDown['music']!;
+        break;
+      case 'background':
+        dropDown['background'] = !dropDown['background']!;
         break;
     }
   }
