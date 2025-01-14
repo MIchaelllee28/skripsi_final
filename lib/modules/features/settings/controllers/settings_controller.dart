@@ -39,6 +39,21 @@ class SettingsController extends GetxController {
         itemsOwned.where((item) => item['kategori'] == 'background').toList();
   }
 
+  String getItemsName(String keyDrop) {
+    switch (keyDrop) {
+      case 'languange':
+        return 'English';
+      case 'pot':
+        return selectedItem['pot']?['name'] ?? 'Select';
+      case 'background':
+        return selectedItem['background']?['name'] ?? 'Select';
+      case 'music':
+        return selectedItem['music']?['name'] ?? 'Select';
+      default:
+        return "select";
+    }
+  }
+
   void dropDownMenu(String keyDrop) {
     switch (keyDrop) {
       case 'languange':
@@ -75,6 +90,7 @@ class SettingsController extends GetxController {
     selectedItem.value = selectedItems;
     dropDownMenu(keyDrop);
     IotController.to.getBackgroundColor();
+    IotController.to.getPotSkin();
   }
 
   //reset local and api data

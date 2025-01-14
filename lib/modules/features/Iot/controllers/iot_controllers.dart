@@ -67,6 +67,7 @@ class IotController extends GetxController {
     //init selected items
     selectedItems.value = HiveService.to.selectedBox.get('selectedItems') ?? {};
     getBackgroundColor();
+    getPotSkin();
 
     //init hints
     fetchHints();
@@ -118,6 +119,15 @@ class IotController extends GetxController {
     r.value = int.parse(hexColor.substring(0, 2), radix: 16);
     g.value = int.parse(hexColor.substring(2, 4), radix: 16);
     b.value = int.parse(hexColor.substring(4, 6), radix: 16);
+  }
+
+  //get the pot skin
+
+  RxString potSkinPath = ''.obs;
+
+  Future<void> getPotSkin() async {
+    final result = await selectedItems['pot']['deskripsi'];
+    potSkinPath.value = result;
   }
 
   //fetch data hints untuk bottom body

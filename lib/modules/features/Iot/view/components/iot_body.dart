@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/modules/features/Iot/view/components/bottom_body_part_iot.dart';
 import 'package:trainee/modules/features/Iot/view/components/buttons/right_bottom_arrow.dart';
 import 'package:trainee/modules/features/Iot/view/components/top_body_part_iot.dart';
@@ -40,11 +42,13 @@ class BodyIot extends StatelessWidget {
                     bottom: 220,
                     left: 0,
                     right: 0,
-                    child: Image.asset(
-                      'lib/assets/images/iot/main_part/pot_basic.png',
-                      width: 130,
-                      height: 150,
-                    ),
+                    child: Obx(() => Image.asset(
+                          IotController.to.potSkinPath.value == ''
+                              ? 'lib/assets/images/iot/main_part/pot_basic.png'
+                              : IotController.to.potSkinPath.value,
+                          width: 130,
+                          height: 150,
+                        )),
                   ),
                   Positioned(
                     bottom: 170,
