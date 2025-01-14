@@ -11,6 +11,7 @@ import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/trop
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/tutorial_button.dart';
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/water_button.dart';
 import 'package:trainee/utils/services/dio_service.dart';
+import 'package:trainee/utils/services/hive_service.dart';
 
 enum Directions { left, right }
 
@@ -55,9 +56,17 @@ class IotController extends GetxController {
   final RxBool _relayValue2 = true.obs;
   final RxBool _relayValue3 = true.obs;
 
+  // selected items from hive (settings)
+
+  RxMap selectedItems = {}.obs;
+
   @override
   void onInit() {
     super.onInit();
+
+    //init selected items
+    selectedItems.value = HiveService.to.selectedBox.get('selectedItems') ?? {};
+    getBackgroundColor();
 
     //init hints
     fetchHints();
@@ -96,6 +105,19 @@ class IotController extends GetxController {
     databaseRelay3.onValue.listen((event) {
       _relayValue3.value = event.snapshot.value as bool;
     });
+  }
+
+  // get the backround color rgb
+  final Rx<int> r = 255.obs;
+  final Rx<int> g = 255.obs;
+  final Rx<int> b = 255.obs;
+
+  Future<void> getBackgroundColor() async {
+    final result = selectedItems['background']['deskripsi'];
+    final hexColor = result.replaceAll("#", "");
+    r.value = int.parse(hexColor.substring(0, 2), radix: 16);
+    g.value = int.parse(hexColor.substring(2, 4), radix: 16);
+    b.value = int.parse(hexColor.substring(4, 6), radix: 16);
   }
 
   //fetch data hints untuk bottom body

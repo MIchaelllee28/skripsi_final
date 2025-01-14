@@ -34,7 +34,7 @@ class SettingsDropdown extends StatelessWidget {
               Text(
                 keyDrop == 'language'
                     ? 'English'
-                    : SettingsController.to.selectedItem[keyDrop]['name'] ??
+                    : SettingsController.to.selectedItem[keyDrop]?['name'] ??
                         'loading...',
                 style: TextStyle(color: Colors.grey[600]),
               ),

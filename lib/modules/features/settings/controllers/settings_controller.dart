@@ -1,5 +1,6 @@
 // settings_controller.dart
 import 'package:get/get.dart';
+import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
 
@@ -73,6 +74,7 @@ class SettingsController extends GetxController {
     await HiveService.to.selectedBox.put('selectedItems', selectedItems);
     selectedItem.value = selectedItems;
     dropDownMenu(keyDrop);
+    IotController.to.getBackgroundColor();
   }
 
   //reset local and api data
