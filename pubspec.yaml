@@ -49,6 +49,7 @@ dependencies:
   cached_network_image: ^3.2.3
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  audioplayers: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
     - lib/assets/images/trophy/
     - lib/assets/images/trophy/buttons/
     - lib/assets/images/shop/
+    - assets/music/
     
 
 

@@ -89,8 +89,11 @@ class SettingsController extends GetxController {
     await HiveService.to.selectedBox.put('selectedItems', selectedItems);
     selectedItem.value = selectedItems;
     dropDownMenu(keyDrop);
+    IotController.to.selectedItems.value =
+        HiveService.to.selectedBox.get('selectedItems') ?? {};
     IotController.to.getBackgroundColor();
     IotController.to.getPotSkin();
+    IotController.to.getMusic();
   }
 
   //reset local and api data

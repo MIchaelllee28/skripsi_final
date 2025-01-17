@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/modules/features/Iot/view/components/bottom_body_part_iot.dart';
-import 'package:trainee/modules/features/Iot/view/components/buttons/right_bottom_arrow.dart';
 import 'package:trainee/modules/features/Iot/view/components/top_body_part_iot.dart';
 import 'package:trainee/shared/styles/google_text_style.dart';
 
@@ -163,7 +162,8 @@ class BodyIot extends StatelessWidget {
                   ),
                 ),
               ),
-              RightArrow(onTap: () {})
+              //TODO: Add a button to change the plant skin
+              //  RightArrow(onTap: () {})
             ],
           ),
         ),

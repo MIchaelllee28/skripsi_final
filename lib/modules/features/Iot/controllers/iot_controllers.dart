@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -56,6 +57,9 @@ class IotController extends GetxController {
   final RxBool _relayValue2 = true.obs;
   final RxBool _relayValue3 = true.obs;
 
+  // audio player
+  late AudioPlayer player = AudioPlayer();
+
   // selected items from hive (settings)
 
   RxMap selectedItems = {}.obs;
@@ -74,6 +78,15 @@ class IotController extends GetxController {
 
     //change index
     changeHintsIndex();
+
+    // Create the audio player.
+    player = AudioPlayer();
+
+    // Set the release mode to keep the source after playback has completed.
+    player.setReleaseMode(ReleaseMode.stop);
+
+    // Start the player as soon as the app is displayed.
+    getMusic();
 
     // init soil moisture
     databaseSoil1.onValue.listen((event) {
@@ -128,6 +141,16 @@ class IotController extends GetxController {
   Future<void> getPotSkin() async {
     final result = await selectedItems['pot']['deskripsi'];
     potSkinPath.value = result;
+  }
+
+  //get the music
+  RxString musicPath = ''.obs;
+
+  //TODO: perbaiki path music
+  Future<void> getMusic() async {
+    final result = await selectedItems['music']['deskripsi'];
+    musicPath.value = result;
+    await player.play(AssetSource(musicPath.value));
   }
 
   //fetch data hints untuk bottom body
