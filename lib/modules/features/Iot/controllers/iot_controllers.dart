@@ -146,7 +146,7 @@ class IotController extends GetxController {
   //get the music
   RxString musicPath = ''.obs;
 
-  //TODO: perbaiki path music
+ 
   Future<void> getMusic() async {
     final result = await selectedItems['music']['deskripsi'];
     musicPath.value = result;

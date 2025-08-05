@@ -12,10 +12,10 @@ class ApiConstant {
 
 class ApiEndPoints {
   static String baseUrl = "https://67500d8e69dc1669ec197504.mockapi.io/";
-  static _AuthEndPoints authEndPoints = _AuthEndPoints();
+  static AuthEndPoints authEndPoints = AuthEndPoints();
 }
 
-class _AuthEndPoints {
+class AuthEndPoints {
   final String registerEmail = '';
   final String loginEmail = 'auth/login';
 }

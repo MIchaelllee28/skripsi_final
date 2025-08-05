@@ -61,7 +61,7 @@ class ShopController extends GetxController {
       // Refetch all items to refresh the lists
       await fetchShopItems();
     } catch (e) {
-      print('Error updating item status: $e');
+      debugPrint('Error updating item status: $e');
     }
   }
 

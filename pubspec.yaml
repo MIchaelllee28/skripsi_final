@@ -38,11 +38,11 @@ dependencies:
   get: ^4.6.5
   flutter_screenutil: ^5.7.0
   google_fonts: ^4.0.4
-  firebase_core: 
+  firebase_core: ^2.24.2
   firebase_analytics: ^10.8.0
   firebase_database: ^10.4.0
   sidebarx: ^0.17.1
-  firebase_auth: 
+  firebase_auth: ^4.16.0 
   connectivity_plus: ^5.0.2
   dio: ^5.7.0
   flutter_widget_from_html: ^0.14.11

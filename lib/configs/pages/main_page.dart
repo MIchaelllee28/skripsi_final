@@ -1,4 +1,4 @@
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:trainee/modules/features/Iot/bindings/iot_bindings.dart';
 import 'package:trainee/modules/features/Iot/view/ui/iot_view.dart';
 import 'package:trainee/modules/features/home/view/ui/home_view.dart';
