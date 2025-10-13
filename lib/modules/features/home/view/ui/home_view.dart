@@ -16,6 +16,7 @@ class AuthView extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("lib/assets/images/auth/backround.png"),
+            fit: BoxFit.cover,
           ),
         ),
         child: Column(
