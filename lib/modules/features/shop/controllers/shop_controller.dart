@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_background.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_musik.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_pot.dart';
@@ -46,6 +47,13 @@ class ShopController extends GetxController {
   Future<void> buyItem(String itemId) async {
     try {
       // Update item status in the API
+      final itemHarga =
+          shopItems.firstWhere((element) => element['id'] == itemId);
+      final price = itemHarga['harga'] as int;
+      if (IotController.to.coinValue.value < price) {
+        return;
+      }
+
       await DioService.dioCall().put('Shop_items/$itemId', data: {'status': 1});
 
       // Get items to save

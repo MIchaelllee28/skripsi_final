@@ -1,4 +1,7 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:trainee/modules/features/settings/controllers/settings_controller.dart';
 
 class SettingsDropdown extends StatelessWidget {
@@ -17,51 +20,88 @@ class SettingsDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.green[700],
-              fontSize: 18,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Row(
+        children: [
+          Flexible(
+            flex: 4,
+            fit: FlexFit.tight,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.green[700],
+                fontSize: 18,
+              ),
             ),
           ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                SettingsController.to.getItemsName(keyDrop),
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.green[700],
+          const SizedBox(width: 16),
+          Obx(
+            () => Flexible(
+              flex: 5,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2<String?>(
+                  value: _getSelectedValue(keyDrop),
+                  isExpanded: true,
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      _onItemSelected(newValue, keyDrop);
+                    }
+                  },
+                  hint: Text(
+                    'Select',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      color: options.isNotEmpty ? Colors.black : Colors.grey,
+                    ),
+                  ),
+                  items: options
+                      .map(
+                        (element) => DropdownMenuItem<String>(
+                          value: element['id'], // Store the ID as value
+                          child: Text(
+                            element['nama'], // Display the name
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
-                onPressed: () {
-                  SettingsController.to.dropDownMenu(keyDrop);
-                },
               ),
-            ],
-          ),
-        ),
-        if (isOpened == true)
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: options.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(options[index]['nama']),
-                onTap: () {
-                  SettingsController.to.selectItems(index, options, keyDrop);
-                },
-              );
-            },
-          ),
-      ],
+            ),
+          )
+        ],
+      ),
     );
+  }
+
+  String? _getSelectedValue(String keyDrop) {
+    final selectedItem = SettingsController.to.selectedItem[keyDrop];
+    if (selectedItem != null && selectedItem['id'] != null) {
+      return selectedItem['id'].toString(); // Return the ID as string
+    }
+    return null; // Return null for the "Select" option
+  }
+
+  void _onItemSelected(String itemId, String keyDrop) {
+    // Find the selected item from options
+    final selectedItem = options.firstWhere(
+      (element) => element['id'].toString() == itemId,
+      orElse: () => {},
+    );
+
+    if (selectedItem.isNotEmpty) {
+      // Find the index of the selected item
+      final index = options.indexWhere(
+        (element) => element['id'].toString() == itemId,
+      );
+
+      if (index != -1) {
+        SettingsController.to.selectItems(index, options, keyDrop);
+      }
+    }
   }
 }
