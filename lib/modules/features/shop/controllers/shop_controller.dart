@@ -3,6 +3,7 @@ import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_background.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_musik.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_pot.dart';
+import 'package:trainee/modules/features/shop/view/components/success_dialog.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:trainee/utils/services/hive_service.dart';
@@ -47,6 +48,11 @@ class ShopController extends GetxController {
   Future<void> buyItem(String itemId) async {
     try {
       // Update item status in the API
+      if (itemId == '11') {
+        IotController.to.addCoins(1000);
+        return;
+      }
+
       final itemHarga =
           shopItems.firstWhere((element) => element['id'] == itemId);
       final price = itemHarga['harga'] as int;
@@ -54,17 +60,23 @@ class ShopController extends GetxController {
         return;
       }
 
-      await DioService.dioCall().put('Shop_items/$itemId', data: {'status': 1});
+      await DioService.dioCall().put(
+        'Shop_items/$itemId',
+        data: {'status': 1},
+      );
+      IotController.to.reduceCoins(price);
 
       // Get items to save
       var itemToSave = shopItems.firstWhere((item) => item['id'] == itemId);
 
       // Get existing items
       List existingItems = HiveService.to.read('shopItems') ?? [];
+      IotController.to.listBackground.add(itemToSave);
       existingItems.add(itemToSave);
 
       // Save updated list
       HiveService.to.save('shopItems', existingItems);
+      Get.dialog(const SuccessDialog());
 
       // Refetch all items to refresh the lists
       await fetchShopItems();

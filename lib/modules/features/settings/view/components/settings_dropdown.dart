@@ -37,12 +37,13 @@ class SettingsDropdown extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          Obx(
-            () => Flexible(
+          Obx(() {
+            final selectedValue = _getSelectedValue(keyDrop);
+            return Flexible(
               flex: 5,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton2<String?>(
-                  value: _getSelectedValue(keyDrop),
+                  value: selectedValue,
                   isExpanded: true,
                   onChanged: (String? newValue) {
                     if (newValue != null) {
@@ -71,8 +72,8 @@ class SettingsDropdown extends StatelessWidget {
                       .toList(),
                 ),
               ),
-            ),
-          )
+            );
+          })
         ],
       ),
     );

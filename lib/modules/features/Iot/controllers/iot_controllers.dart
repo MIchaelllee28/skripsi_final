@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
@@ -13,6 +15,8 @@ import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/tuto
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/water_button.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
+
+import '../../shop/view/components/success_dialog.dart';
 
 enum Directions { left, right }
 
@@ -65,7 +69,7 @@ class IotController extends GetxController {
   RxMap selectedItems = {}.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
     //init selected items
@@ -119,6 +123,14 @@ class IotController extends GetxController {
     databaseRelay3.onValue.listen((event) {
       _relayValue3.value = event.snapshot.value as bool;
     });
+
+    listBackground.value = await HiveService.to
+            .read('shopItems')
+            .where((item) => item['kategori'] == 'background')
+            .toList() ??
+        [];
+    currentIndexBg.value = listBackground.indexWhere(
+        (element) => element['nama'] == selectedItems['background']?['name']);
   }
 
   // get the backround color rgb
@@ -134,6 +146,38 @@ class IotController extends GetxController {
     b.value = int.parse(hexColor.substring(4, 6), radix: 16);
   }
 
+  final RxString bgName = 'Calmy Grey'.obs;
+  Future<void> getNameBg() async {
+    final result = selectedItems['background']['name'];
+    bgName.value = result;
+  }
+
+  final RxList listBackground = [].obs;
+  final RxInt currentIndexBg = 0.obs;
+  Future changeIndex(String code) async {
+    currentIndexBg.value = code == 'plus'
+        ? (currentIndexBg.value + 1) % listBackground.length
+        : (currentIndexBg.value - 1) % listBackground.length;
+    updateArrow();
+  }
+
+  Future updateArrow() async {
+    selectedItems['background'] = {
+      'id': listBackground[currentIndexBg.value]['id'],
+      'name': listBackground[currentIndexBg.value]['nama'],
+      'deskripsi': listBackground[currentIndexBg.value]['deskripsi'],
+    };
+
+    bgName.value = listBackground[currentIndexBg.value]['nama'];
+    final hexColor =
+        selectedItems['background']['deskripsi'].replaceAll("#", "");
+    r.value = int.parse(hexColor.substring(0, 2), radix: 16);
+    g.value = int.parse(hexColor.substring(2, 4), radix: 16);
+    b.value = int.parse(hexColor.substring(4, 6), radix: 16);
+
+    await HiveService.to.selectedBox.put('selectedItems', selectedItems);
+  }
+
   //get the pot skin
 
   RxString potSkinPath = ''.obs;
@@ -146,7 +190,6 @@ class IotController extends GetxController {
   //get the music
   RxString musicPath = ''.obs;
 
- 
   Future<void> getMusic() async {
     final result = await selectedItems['music']['deskripsi'];
     musicPath.value = result;
@@ -180,6 +223,7 @@ class IotController extends GetxController {
 
   void toogleRelay3() {
     databaseRelay3.set(!_relayValue3.value);
+    Get.dialog(const SuccessDialog());
   }
 
   // Getter for the relay
@@ -203,6 +247,11 @@ class IotController extends GetxController {
 
   void addCoins(int amount) {
     coinValue.value += amount;
+    update();
+  }
+
+  void reduceCoins(int amount) {
+    coinValue.value -= amount;
     update();
   }
 
