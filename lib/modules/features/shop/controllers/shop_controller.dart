@@ -49,7 +49,20 @@ class ShopController extends GetxController {
     try {
       // Update item status in the API
       if (itemId == '11') {
-        IotController.to.addCoins(1000);
+        IotController.to.addCoins(500);
+        Get.showSnackbar(
+          GetSnackBar(
+            title: 'Got Coin',
+            message: 'Got 500 coin from this item as reward',
+            animationDuration: const Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 1200),
+            icon: Icon(
+              Icons.monetization_on_rounded,
+              color: Colors.green.shade800,
+              size: 20,
+            ),
+          ),
+        );
         return;
       }
 

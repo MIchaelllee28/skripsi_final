@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -87,7 +88,7 @@ class IotController extends GetxController {
     player = AudioPlayer();
 
     // Set the release mode to keep the source after playback has completed.
-    player.setReleaseMode(ReleaseMode.stop);
+    player.setReleaseMode(ReleaseMode.loop);
 
     // Start the player as soon as the app is displayed.
     getMusic();
@@ -191,9 +192,10 @@ class IotController extends GetxController {
   RxString musicPath = ''.obs;
 
   Future<void> getMusic() async {
+    await player.stop();
     final result = await selectedItems['music']['deskripsi'];
     musicPath.value = result;
-    await player.play(AssetSource(musicPath.value));
+    await player.play(AssetSource(musicPath.value), volume: 100);
   }
 
   //fetch data hints untuk bottom body
@@ -305,7 +307,20 @@ class IotController extends GetxController {
         Get.toNamed(MainRoute.tutorial);
         break;
       case Buttons.water:
-        Get.toNamed(MainRoute.home);
+        IotController.to.addCoins(500);
+        Get.showSnackbar(
+          GetSnackBar(
+            title: 'Successfuly water plant',
+            message: 'success water the plant, got 200 coin as reward',
+            animationDuration: const Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 2000),
+            icon: Icon(
+              Icons.monetization_on_rounded,
+              color: Colors.green.shade800,
+              size: 20,
+            ),
+          ),
+        );
         break;
     }
   }
