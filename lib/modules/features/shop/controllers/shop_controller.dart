@@ -49,7 +49,7 @@ class ShopController extends GetxController {
     try {
       // Update item status in the API
       if (itemId == '11') {
-        IotController.to.addCoins(500);
+        IotController.to.addCoins(amount: 500);
         Get.showSnackbar(
           GetSnackBar(
             title: 'Got Coin',

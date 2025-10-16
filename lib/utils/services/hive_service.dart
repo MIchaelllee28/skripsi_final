@@ -5,12 +5,14 @@ class HiveService extends GetxService {
   static HiveService get to => Get.find();
   late Box box;
   late Box selectedBox;
+  late Box iotLogicBox;
 
   @override
   void onInit() async {
     await Hive.initFlutter();
     box = await Hive.openBox('shopItems');
     selectedBox = await Hive.openBox('selectedItems');
+    iotLogicBox = await Hive.openBox('iot_logic');
     super.onInit();
   }
 

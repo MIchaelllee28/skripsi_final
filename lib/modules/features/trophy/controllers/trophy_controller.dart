@@ -37,7 +37,7 @@ class TrophyController extends GetxController {
     trophySayuranData.value = trophySayuranData.map((item) {
       if (item['id'] == id) {
         if (item['status'] != 1) {
-          IotController.to.addCoins(500);
+          IotController.to.addCoins(amount: 500);
           return {...item, 'status': 1};
         }
       }

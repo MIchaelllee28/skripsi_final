@@ -68,6 +68,11 @@ class IotController extends GetxController {
   // selected items from hive (settings)
 
   RxMap selectedItems = {}.obs;
+  RxMap iotLogic = {}.obs;
+  //pengaturan coin
+  RxInt coinValue = 0.obs;
+  DateTime? lastWaterStamp;
+  RxInt waterCount = 0.obs;
 
   @override
   void onInit() async {
@@ -75,6 +80,12 @@ class IotController extends GetxController {
 
     //init selected items
     selectedItems.value = HiveService.to.selectedBox.get('selectedItems') ?? {};
+    iotLogic.value = HiveService.to.iotLogicBox.get('iot_logic') ?? {};
+    coinValue.value = iotLogic['coin'];
+    waterCount.value = iotLogic['water_count'];
+    lastWaterStamp = iotLogic['water_stamp'] != null
+        ? DateTime.tryParse(iotLogic['water_stamp'])
+        : null;
     getBackgroundColor();
     getPotSkin();
 
@@ -244,16 +255,26 @@ class IotController extends GetxController {
   // Getter for the liquid
   RxBool get liquidValue => _liquidValue;
 
-  //pengaturan coin
-  RxInt coinValue = 250.obs;
-
-  void addCoins(int amount) {
+  void addCoins(
+      {required int amount, DateTime? dateTime, int? waterCount}) async {
     coinValue.value += amount;
+    final iotLogicMap = {
+      'coin': coinValue.value,
+      'water_stamp': dateTime?.toIso8601String() ?? iotLogic['water_stamp'],
+      'water_count': waterCount ?? iotLogic['water_count'],
+    };
+    await HiveService.to.iotLogicBox.put('iot_logic', iotLogicMap);
     update();
   }
 
-  void reduceCoins(int amount) {
+  void reduceCoins(int amount) async {
     coinValue.value -= amount;
+    final iotLogicMap = {
+      'coin': coinValue.value,
+      'water_stamp': iotLogic['water_stamp'],
+      'water_count': iotLogic['water_count'],
+    };
+    await HiveService.to.iotLogicBox.put('iot_logic', iotLogicMap);
     update();
   }
 
@@ -307,7 +328,32 @@ class IotController extends GetxController {
         Get.toNamed(MainRoute.tutorial);
         break;
       case Buttons.water:
-        IotController.to.addCoins(500);
+        if (lastWaterStamp != null &&
+            !DateTime.now()
+                .isAfter(lastWaterStamp!.add(const Duration(days: 1)))) {
+          Get.showSnackbar(
+            GetSnackBar(
+              title: 'Already water the plant',
+              message: 'you can only water plant 1 times per day',
+              animationDuration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 2000),
+              icon: Icon(
+                Icons.info_outline,
+                color: Colors.amber.shade800,
+                size: 20,
+              ),
+            ),
+          );
+          return;
+        }
+
+        lastWaterStamp = DateTime.now();
+        IotController.to.addCoins(
+          amount: 500,
+          dateTime: DateTime.now(),
+          waterCount: waterCount.value,
+        );
+
         Get.showSnackbar(
           GetSnackBar(
             title: 'Successfuly water plant',
