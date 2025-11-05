@@ -20,7 +20,7 @@ class HomeButton extends StatelessWidget {
                 IotController.to.buttonMove(Buttons.home);
               },
               icon: Image.asset(
-                "lib/assets/images/iot/buttons/home_button.png",
+                "assets/images/iot/buttons/home_button.png",
                 height: 70,
                 width: 60,
                 fit: BoxFit.cover,

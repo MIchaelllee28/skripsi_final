@@ -76,16 +76,16 @@ flutter:
     
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/images/auth/
-    - lib/assets/images/mainmenu/
-    - lib/assets/images/iot/app_bar/
-    - lib/assets/images/iot/bottom_bar/
-    - lib/assets/images/iot/buttons/
-    - lib/assets/images/iot/main_part/
-    - lib/assets/images/tutorial/
-    - lib/assets/images/trophy/
-    - lib/assets/images/trophy/buttons/
-    - lib/assets/images/shop/
+    - assets/images/auth/
+    - assets/images/mainmenu/
+    - assets/images/iot/app_bar/
+    - assets/images/iot/bottom_bar/
+    - assets/images/iot/buttons/
+    - assets/images/iot/main_part/
+    - assets/images/tutorial/
+    - assets/images/trophy/
+    - assets/images/trophy/buttons/
+    - assets/images/shop/
     - assets/music/
     
 

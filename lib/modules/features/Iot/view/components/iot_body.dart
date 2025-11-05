@@ -23,7 +23,7 @@ class BodyIot extends StatelessWidget {
                 children: [
                   // Background table image
                   Image.asset(
-                    'lib/assets/images/iot/main_part/table_real.png',
+                    'assets/images/iot/main_part/table_real.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -32,7 +32,7 @@ class BodyIot extends StatelessWidget {
                     left: 0,
                     right: 0,
                     child: Image.asset(
-                      'lib/assets/images/iot/main_part/plant_level_1.png',
+                      'assets/images/iot/main_part/plant_level_1.png',
                       width: 150,
                       height: 150,
                     ),
@@ -43,7 +43,7 @@ class BodyIot extends StatelessWidget {
                     right: 0,
                     child: Obx(() => Image.asset(
                           IotController.to.potSkinPath.value == ''
-                              ? 'lib/assets/images/iot/main_part/pot_basic.png'
+                              ? 'assets/images/iot/main_part/pot_basic.png'
                               : IotController.to.potSkinPath.value,
                           width: 130,
                           height: 150,

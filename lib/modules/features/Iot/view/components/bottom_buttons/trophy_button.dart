@@ -20,7 +20,7 @@ class TrophyButton extends StatelessWidget {
                 IotController.to.buttonMove(Buttons.trophy);
               },
               icon: Image.asset(
-                "lib/assets/images/iot/buttons/trophy_button.png",
+                "assets/images/iot/buttons/trophy_button.png",
                 height: 70,
                 width: 60,
                 fit: BoxFit.cover,

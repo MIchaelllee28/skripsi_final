@@ -61,8 +61,7 @@ class MenuTanam extends StatelessWidget {
                           const SizedBox(
                             width: 7,
                           ),
-                          Image.asset(
-                              "lib/assets/images/mainmenu/checklist.png"),
+                          Image.asset("assets/images/mainmenu/checklist.png"),
                         ],
                       ),
                     ),
@@ -103,7 +102,7 @@ class MenuTanam extends StatelessWidget {
                           const SizedBox(
                             width: 7,
                           ),
-                          Image.asset("lib/assets/images/mainmenu/book.png"),
+                          Image.asset("assets/images/mainmenu/book.png"),
                         ],
                       ),
                     ),

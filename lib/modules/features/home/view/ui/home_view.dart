@@ -15,7 +15,7 @@ class AuthView extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("lib/assets/images/auth/backround.png"),
+            image: AssetImage("assets/images/auth/backround.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -28,7 +28,7 @@ class AuthView extends StatelessWidget {
               height: 70,
             ),
             const Image(
-              image: AssetImage("lib/assets/images/auth/game_title.png"),
+              image: AssetImage("assets/images/auth/game_title.png"),
             ),
             const SizedBox(
               height: 10,
@@ -36,7 +36,7 @@ class AuthView extends StatelessWidget {
             GestureDetector(
               onTap: authController.moveToMainMenu,
               child: const Image(
-                image: AssetImage("lib/assets/images/auth/continue_button.png"),
+                image: AssetImage("assets/images/auth/continue_button.png"),
               ),
             ),
             const SizedBox(
@@ -44,7 +44,7 @@ class AuthView extends StatelessWidget {
             ),
             GestureDetector(
               child: const Image(
-                image: AssetImage("lib/assets/images/auth/logout_button.png"),
+                image: AssetImage("assets/images/auth/logout_button.png"),
               ),
             ),
           ],

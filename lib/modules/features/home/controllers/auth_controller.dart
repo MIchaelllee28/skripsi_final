@@ -7,12 +7,12 @@ class AuthController extends GetxController {
 
   void preloadImages(BuildContext context) {
     precacheImage(
-        const AssetImage('lib/assets/images/mainmenu/backround.png'), context);
+        const AssetImage('assets/images/mainmenu/backround.png'), context);
     // Add more images to preload as needed
   }
 
   void moveToMainMenu() {
     Get.offAllNamed(MainRoute.main,
-        arguments: 'lib/assets/images/mainmenu/backround.png');
+        arguments: 'assets/images/mainmenu/backround.png');
   }
 }

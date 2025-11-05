@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
+import 'package:trainee/modules/features/shop/repository/shop_repository.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_background.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_musik.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_pot.dart';
 import 'package:trainee/modules/features/shop/view/components/success_dialog.dart';
-import 'package:trainee/utils/services/dio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:trainee/utils/services/hive_service.dart';
 
@@ -16,6 +16,7 @@ class ShopController extends GetxController {
   RxList<dynamic> potItems = [].obs;
   RxList<dynamic> musikItems = [].obs;
   RxList<dynamic> backgroundItems = [].obs;
+  late ShopRepository repository;
 
   RxList<String> shopChip = [
     "Pot",
@@ -32,8 +33,9 @@ class ShopController extends GetxController {
   }
 
   Future<void> fetchShopItems() async {
-    final result = await DioService.dioCall().get('Shop_items');
-    shopItems.value = result.data;
+    repository = ShopRepository();
+    shopItems.value =
+        repository.initializeShop(HiveService.to.read('shopItems') ?? []);
 
     potItems.value =
         shopItems.where((items) => items['kategori'] == 'pot').toList();
@@ -73,10 +75,6 @@ class ShopController extends GetxController {
         return;
       }
 
-      await DioService.dioCall().put(
-        'Shop_items/$itemId',
-        data: {'status': 1},
-      );
       IotController.to.reduceCoins(price);
 
       // Get items to save
@@ -84,11 +82,16 @@ class ShopController extends GetxController {
 
       // Get existing items
       List existingItems = HiveService.to.read('shopItems') ?? [];
+      Set existingSelectedItem = HiveService.to.read('selectedItems') ?? {};
       IotController.to.listBackground.add(itemToSave);
       existingItems.add(itemToSave);
 
       // Save updated list
       HiveService.to.save('shopItems', existingItems);
+      HiveService.to.save(
+        'selectedItems',
+        existingSelectedItem.add(existingItems),
+      );
       Get.dialog(const SuccessDialog());
 
       // Refetch all items to refresh the lists

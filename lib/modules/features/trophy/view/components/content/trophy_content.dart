@@ -83,7 +83,7 @@ class TrophyContent extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    'lib/assets/images/iot/app_bar/coin.png', // Replace with your coin image path
+                                    'assets/images/iot/app_bar/coin.png', // Replace with your coin image path
                                     width: 15,
                                     height: 15,
                                   ),

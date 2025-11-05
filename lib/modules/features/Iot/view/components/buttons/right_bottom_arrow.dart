@@ -14,7 +14,7 @@ class RightArrow extends StatelessWidget {
         height: 120,
         child: IconButton(
           onPressed: onTap,
-          icon: Image.asset("lib/assets/images/iot/buttons/righties.png"),
+          icon: Image.asset("assets/images/iot/buttons/righties.png"),
         ),
       ),
     );

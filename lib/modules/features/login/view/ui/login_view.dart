@@ -15,7 +15,7 @@ class LoginView extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("lib/assets/images/auth/backround.png"),
+              image: AssetImage("assets/images/auth/backround.png"),
               fit: BoxFit.fill),
         ),
         child: Center(

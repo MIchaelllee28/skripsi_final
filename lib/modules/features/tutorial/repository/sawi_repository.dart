@@ -15,7 +15,7 @@ class SawiRepository {
             <li><span style="color: #ff0000;">Hari 8-14:</span> Tunas berkembang menjadi bibit kecil dengan beberapa daun sejati muncul.</li>
           </ul>
         """,
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
     },
     {
       "id": 2,
@@ -31,7 +31,7 @@ class SawiRepository {
             <li><span style="color: #ff0000;">Perlindungan:</span> Lindungi benih dan bibit dari serangga dan hama. Jika perlu, gunakan penutup transparan untuk menjaga kelembaban dan melindungi dari hama.</li>
           </ul>
         """,
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
     },
     {
       "id": 3,
@@ -45,7 +45,7 @@ class SawiRepository {
             <li><span style="color: #ff0000;">Hari 15-28:</span> Tanaman mulai tumbuh lebih cepat, dengan daun yang lebih besar dan lebih banyak, serta batang yang semakin panjang dan kokoh.</li>
           </ul>
         """,
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
     },
     {
       "id": 4,
@@ -62,7 +62,7 @@ class SawiRepository {
             <li><span style="color: #ff0000;">Pencahayaan:</span> Pastikan tanaman tetap mendapatkan sinar matahari langsung selama 4-6 jam per hari.</li>
           </ul>
         """,
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
     },
     {
       "id": 5,
@@ -76,7 +76,7 @@ class SawiRepository {
             <li><span style="color: #ff0000;">Hari 29-42:</span> Tanaman mencapai tinggi optimal dan siap untuk dipanen. Daun dan batang sudah cukup besar dan segar.</li>
           </ul>
         """,
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
     },
     {
       "id": 6,
@@ -93,7 +93,7 @@ class SawiRepository {
             <li><span style="color: #ff0000;">Panen:</span> Sawi dapat dipanen sekitar 6-8 minggu setelah tanam. Potong seluruh bagian tanaman di dekat pangkal. Pastikan untuk memanen sebelum tanaman berbunga untuk mendapatkan kualitas daun yang terbaik.</li>
           </ul>
         """,
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
     },
   ];
 

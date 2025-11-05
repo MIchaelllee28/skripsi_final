@@ -14,7 +14,7 @@ class LeftArrow extends StatelessWidget {
         height: 120,
         child: IconButton(
           onPressed: onTap,
-          icon: Image.asset("lib/assets/images/iot/buttons/lefties.png"),
+          icon: Image.asset("assets/images/iot/buttons/lefties.png"),
         ),
       ),
     );

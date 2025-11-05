@@ -20,7 +20,7 @@ class WaterButton extends StatelessWidget {
                 IotController.to.buttonMove(Buttons.water);
               },
               icon: Image.asset(
-                "lib/assets/images/iot/buttons/water_button.png",
+                "assets/images/iot/buttons/water_button.png",
                 height: 70,
                 width: 70,
                 fit: BoxFit.cover,

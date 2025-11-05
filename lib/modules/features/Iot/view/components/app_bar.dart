@@ -17,8 +17,7 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton.icon(
             onPressed: IotController.to.toogleRelay1,
-            icon: Image.asset("lib/assets/images/iot/app_bar/coin.png",
-                height: 27),
+            icon: Image.asset("assets/images/iot/app_bar/coin.png", height: 27),
             label: Text(
               IotController.to.coinValue.value.toString(),
               style: GoogleTextStyle.fw400.copyWith(
@@ -37,8 +36,7 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton.icon(
             onPressed: IotController.to.toogleRelay2,
-            icon: Image.asset("lib/assets/images/iot/app_bar/soil.png",
-                height: 27),
+            icon: Image.asset("assets/images/iot/app_bar/soil.png", height: 27),
             label: Text(
               '${IotController.to.soilValue1.value}',
               style: GoogleTextStyle.fw400.copyWith(
@@ -57,8 +55,8 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton.icon(
             onPressed: IotController.to.toogleRelay3,
-            icon: Image.asset("lib/assets/images/iot/app_bar/water.png",
-                height: 27),
+            icon:
+                Image.asset("assets/images/iot/app_bar/water.png", height: 27),
             label: IotController.to.liquidValue.value == true
                 ? Text(
                     "Good",
@@ -85,8 +83,7 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton.icon(
             onPressed: () {},
-            icon: Image.asset("lib/assets/images/iot/app_bar/temp.png",
-                height: 27),
+            icon: Image.asset("assets/images/iot/app_bar/temp.png", height: 27),
             label: Text(
               '${IotController.to.tempValue.value}',
               style: GoogleTextStyle.fw400.copyWith(

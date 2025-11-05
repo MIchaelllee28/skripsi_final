@@ -39,8 +39,7 @@ class SettingsMenu extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(
-                                "lib/assets/images/mainmenu/setting.png"),
+                            Image.asset("assets/images/mainmenu/setting.png"),
                             const SizedBox(
                               width: 5,
                             ),
@@ -56,7 +55,7 @@ class SettingsMenu extends StatelessWidget {
                               width: 5,
                             ),
                             Image.asset(
-                              "lib/assets/images/mainmenu/setting.png",
+                              "assets/images/mainmenu/setting.png",
                             ),
                           ],
                         ),

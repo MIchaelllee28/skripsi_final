@@ -5,7 +5,7 @@ class TrophySayuranRepository {
       "kategori": "kangkung",
       "trophy_level": 1,
       "deskripsi": 'Raih Level 1 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_1.png",
+      "trophy": "assets/images/trophy/trophy_1.png",
       "status": 0,
     },
     {
@@ -13,7 +13,7 @@ class TrophySayuranRepository {
       "kategori": "kangkung",
       "trophy_level": 2,
       "deskripsi": 'Raih Level 2 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_2.png",
+      "trophy": "assets/images/trophy/trophy_2.png",
       "status": 0,
     },
     {
@@ -21,7 +21,7 @@ class TrophySayuranRepository {
       "kategori": "kangkung",
       "trophy_level": 3,
       "deskripsi": 'Raih Level 3 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_3.png",
+      "trophy": "assets/images/trophy/trophy_3.png",
       "status": 0,
     },
     {
@@ -29,7 +29,7 @@ class TrophySayuranRepository {
       "kategori": "sawi",
       "trophy_level": 1,
       "deskripsi": 'Raih Level 1 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_1.png",
+      "trophy": "assets/images/trophy/trophy_1.png",
       "status": 0,
     },
     {
@@ -37,7 +37,7 @@ class TrophySayuranRepository {
       "kategori": "sawi",
       "trophy_level": 2,
       "deskripsi": 'Raih Level 2 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_2.png",
+      "trophy": "assets/images/trophy/trophy_2.png",
       "status": 0,
     },
     {
@@ -45,7 +45,7 @@ class TrophySayuranRepository {
       "kategori": "sawi",
       "trophy_level": 3,
       "deskripsi": 'Raih Level 3 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_3.png",
+      "trophy": "assets/images/trophy/trophy_3.png",
       "status": 0,
     },
     {
@@ -53,7 +53,7 @@ class TrophySayuranRepository {
       "kategori": "selada",
       "trophy_level": 1,
       "deskripsi": 'Raih Level 1 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_1.png",
+      "trophy": "assets/images/trophy/trophy_1.png",
       "status": 0,
     },
     {
@@ -61,7 +61,7 @@ class TrophySayuranRepository {
       "kategori": "selada",
       "trophy_level": 2,
       "deskripsi": 'Raih Level 2 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_2.png",
+      "trophy": "assets/images/trophy/trophy_2.png",
       "status": 0,
     },
     {
@@ -69,7 +69,7 @@ class TrophySayuranRepository {
       "kategori": "selada",
       "trophy_level": 3,
       "deskripsi": 'Raih Level 3 Reward :',
-      "trophy": "lib/assets/images/trophy/trophy_3.png",
+      "trophy": "assets/images/trophy/trophy_3.png",
       "status": 0,
     },
   ];

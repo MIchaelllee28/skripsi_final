@@ -3,28 +3,28 @@ class ChipRepository {
     {
       "id": 1,
       'nama': 'sawi',
-      "foto": "lib/assets/images/tutorial/sawi.png",
+      "foto": "assets/images/tutorial/sawi.png",
       'color': '',
     },
     {
       "id": 2,
       "nama": 'selada',
-      "foto": "lib/assets/images/tutorial/selada.png",
+      "foto": "assets/images/tutorial/selada.png",
     },
     {
       "id": 3,
       "nama": 'kangkung',
-      "foto": "lib/assets/images/tutorial/kangkung.png",
+      "foto": "assets/images/tutorial/kangkung.png",
     },
     {
       "id": 4,
       "nama": 'sprayer',
-      "foto": "lib/assets/images/iot/app_bar/soil.png",
+      "foto": "assets/images/iot/app_bar/soil.png",
     },
     {
       "id": 4,
       "nama": 'sprayer',
-      "foto": "lib/assets/images/tutorial/sprayer.png",
+      "foto": "assets/images/tutorial/sprayer.png",
     },
   ];
 

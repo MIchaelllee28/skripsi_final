@@ -58,7 +58,7 @@ class TutorialAlat extends StatelessWidget {
                         overflow: TextOverflow.clip,
                       ),
                     ),
-                    Image.asset("lib/assets/images/iot/app_bar/coin.png")
+                    Image.asset("assets/images/iot/app_bar/coin.png")
                   ],
                 ),
               );

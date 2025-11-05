@@ -42,7 +42,7 @@ class ShopBodyPot extends StatelessWidget {
                     height: 50,
                     color: Colors.transparent,
                     child: Image.asset(
-                      'lib/assets/images/shop/pita.png',
+                      'assets/images/shop/pita.png',
                       fit: BoxFit.cover,
                     ),
                   ),

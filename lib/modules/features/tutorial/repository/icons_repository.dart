@@ -4,25 +4,25 @@ class IconsRepository {
       "id": 1,
       'nama': 'Coin',
       "deskripsi": 'Coin yang digunakan untuk membeli item didalam game',
-      "foto": "lib/assets/images/iot/app_bar/coin.png",
+      "foto": "assets/images/iot/app_bar/coin.png",
     },
     {
       "id": 2,
       "nama": 'soil',
       "deskripsi": 'Hasil pembacaan nilai Kelembapan tanah tanaman',
-      "foto": "lib/assets/images/iot/app_bar/soil.png",
+      "foto": "assets/images/iot/app_bar/soil.png",
     },
     {
       "id": 3,
       "nama": 'water',
       "deskripsi": 'Hasil pembacaan level air pada larutan nutrisi',
-      "foto": "lib/assets/images/iot/app_bar/water.png",
+      "foto": "assets/images/iot/app_bar/water.png",
     },
     {
       "id": 4,
       "nama": 'temp',
       "deskripsi": 'Hasil pembacaan suhu pada lingkungan sekitar',
-      "foto": "lib/assets/images/iot/app_bar/temp.png",
+      "foto": "assets/images/iot/app_bar/temp.png",
     },
   ];
 

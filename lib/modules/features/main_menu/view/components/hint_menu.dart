@@ -34,7 +34,7 @@ class HintsMenu extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset("lib/assets/images/mainmenu/hint.png"),
+                          Image.asset("assets/images/mainmenu/hint.png"),
                           const SizedBox(
                             width: 5,
                           ),
@@ -49,7 +49,7 @@ class HintsMenu extends StatelessWidget {
                             width: 5,
                           ),
                           Image.asset(
-                            "lib/assets/images/mainmenu/hint.png",
+                            "assets/images/mainmenu/hint.png",
                           ),
                         ],
                       ),

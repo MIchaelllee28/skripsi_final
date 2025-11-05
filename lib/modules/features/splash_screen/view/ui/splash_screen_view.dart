@@ -20,7 +20,7 @@ class SplashScreenView extends StatelessWidget {
             ),
           ),
           child: Center(
-            child: Image.asset('lib/assets/images/auth/java_code.png'),
+            child: Image.asset('assets/images/auth/java_code.png'),
           ),
         ),
       ),

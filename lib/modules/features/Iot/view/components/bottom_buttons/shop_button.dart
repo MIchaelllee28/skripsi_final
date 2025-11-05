@@ -20,7 +20,7 @@ class ShopButton extends StatelessWidget {
                 IotController.to.buttonMove(Buttons.shop);
               },
               icon: Image.asset(
-                "lib/assets/images/iot/buttons/shop_button.png",
+                "assets/images/iot/buttons/shop_button.png",
                 height: 70,
                 width: 60,
                 fit: BoxFit.cover,

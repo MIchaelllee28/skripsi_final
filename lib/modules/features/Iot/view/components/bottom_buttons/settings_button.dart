@@ -20,7 +20,7 @@ class SettingsButton extends StatelessWidget {
                 IotController.to.buttonMove(Buttons.settings);
               },
               icon: Image.asset(
-                "lib/assets/images/iot/buttons/settings_button.png",
+                "assets/images/iot/buttons/settings_button.png",
                 height: 70,
                 width: 60,
                 fit: BoxFit.cover,

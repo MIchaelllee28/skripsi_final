@@ -20,7 +20,7 @@ class TutorialButton extends StatelessWidget {
                 IotController.to.buttonMove(Buttons.tutorial);
               },
               icon: Image.asset(
-                "lib/assets/images/iot/buttons/tutorial_button.png",
+                "assets/images/iot/buttons/tutorial_button.png",
                 height: 70,
                 width: 60,
                 fit: BoxFit.cover,

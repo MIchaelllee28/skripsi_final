@@ -33,7 +33,7 @@ class BottomHints extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset("lib/assets/images/iot/bottom_bar/lamp.png"),
+              Image.asset("assets/images/iot/bottom_bar/lamp.png"),
               SizedBox(
                 width: 300,
                 child: Obx(
