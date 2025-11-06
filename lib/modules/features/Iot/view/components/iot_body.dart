@@ -82,22 +82,22 @@ class BodyIot extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Text(
-                            "Hari ke 1",
-                            style: GoogleTextStyle.fw300.copyWith(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 10.0,
-                                  color: Colors.black.withOpacity(0.3),
-                                  offset: const Offset(1, 1),
+                          child: Obx(() => Text(
+                                "Hari ke ${IotController.to.waterCount}",
+                                style: GoogleTextStyle.fw300.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 10.0,
+                                      color: Colors.black.withOpacity(0.3),
+                                      offset: const Offset(1, 1),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              )),
                         ),
                         const SizedBox(height: 10),
                         // Previous Vegetable Level Container
@@ -140,27 +140,27 @@ class BodyIot extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Sawi ",
-                        style: GoogleTextStyle.fw300.copyWith(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                child: Obx(() => RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Sawi ",
+                            style: GoogleTextStyle.fw300.copyWith(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: IotController.to.getLevel(),
+                            style: GoogleTextStyle.fw300.copyWith(
+                              color: Colors.white70,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: "Lv1",
-                        style: GoogleTextStyle.fw300.copyWith(
-                          color: Colors.white70,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    )),
               ),
               //TODO: Add a button to change the plant skin
               //  RightArrow(onTap: () {})

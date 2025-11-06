@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/modules/features/trophy/repository/trophy_chip_repository.dart';
 import 'package:trainee/modules/features/trophy/repository/trophy_sayuran_repository.dart';
+import 'package:trainee/utils/services/hive_service.dart';
 
 class TrophyController extends GetxController {
   static TrophyController get to => Get.find();
@@ -34,15 +35,28 @@ class TrophyController extends GetxController {
   }
 
   void claimTrophy(int id) {
-    trophySayuranData.value = trophySayuranData.map((item) {
-      if (item['id'] == id) {
-        if (item['status'] != 1) {
-          IotController.to.addCoins(amount: 500);
-          return {...item, 'status': 1};
-        }
-      }
-      return item;
-    }).toList();
+    final data = HiveService.to.iotLogicBox.get('iot_logic');
+    final dataMap =
+        trophySayuranRepository.claimTrophy(id, data['water_count'] ?? 1);
+
+    trophySayuranData.value = dataMap['data'];
+    if (!dataMap['success']) {
+      Get.showSnackbar(
+        GetSnackBar(
+          title: 'Cannot claim the reward',
+          message:
+              'you level to low to claim this reward, try again later after level up',
+          animationDuration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 2000),
+          icon: Icon(
+            Icons.info_outline,
+            color: Colors.amber.shade800,
+            size: 20,
+          ),
+        ),
+      );
+    }
+    refresh();
   }
 
   List getTrophy() {

@@ -74,7 +74,32 @@ class TrophySayuranRepository {
     },
   ];
 
-  List<Map<String, dynamic>> getTrophySayuranData() {
-    return data;
+  List<Map<String, dynamic>> getTrophySayuranData() => data;
+
+  Map<String, dynamic> claimTrophy(int id, int waterCount) {
+    final index = data.indexWhere((item) => item['id'] == id);
+    if (index == -1) return {'data': data, 'success': false};
+
+    final isValid = _validationTrophy(data[index]['trophy_level'], waterCount);
+    if (isValid) {
+      data[index]['status'] = 1;
+    }
+    return {'data': data, 'success': isValid};
+  }
+
+  bool _validationTrophy(int level, int waterCount) {
+    switch (level) {
+      case 1:
+        return waterCount > 1;
+
+      case 2:
+        return waterCount > 7;
+
+      case 3:
+        return waterCount > 14;
+
+      default:
+        return false;
+    }
   }
 }

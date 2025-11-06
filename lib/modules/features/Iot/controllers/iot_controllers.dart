@@ -69,7 +69,7 @@ class IotController extends GetxController {
   //pengaturan coin
   RxInt coinValue = 0.obs;
   DateTime? lastWaterStamp;
-  RxInt waterCount = 0.obs;
+  RxInt waterCount = 1.obs;
 
   @override
   void onInit() async {
@@ -79,7 +79,7 @@ class IotController extends GetxController {
     selectedItems.value = HiveService.to.selectedBox.get('selectedItems') ?? {};
     iotLogic.value = HiveService.to.iotLogicBox.get('iot_logic') ?? {};
     coinValue.value = iotLogic['coin'];
-    waterCount.value = iotLogic['water_count'];
+    waterCount.value = iotLogic['water_count'] ?? 1;
     lastWaterStamp = iotLogic['water_stamp'] != null
         ? DateTime.tryParse(iotLogic['water_stamp'])
         : null;
@@ -168,6 +168,18 @@ class IotController extends GetxController {
         ? (currentIndexBg.value + 1) % listBackground.length
         : (currentIndexBg.value - 1) % listBackground.length;
     updateArrow();
+  }
+
+  String getLevel() {
+    if (waterCount.value <= 6) {
+      return 'Lv1';
+    } else if (waterCount.value > 6) {
+      return 'Lv2';
+    } else if (waterCount.value > 13) {
+      return 'Lv3';
+    } else {
+      return '';
+    }
   }
 
   Future updateArrow() async {
@@ -261,6 +273,7 @@ class IotController extends GetxController {
       'water_count': waterCount ?? iotLogic['water_count'],
     };
     await HiveService.to.iotLogicBox.put('iot_logic', iotLogicMap);
+    lastWaterStamp = dateTime;
     update();
   }
 
@@ -325,9 +338,8 @@ class IotController extends GetxController {
         Get.toNamed(MainRoute.tutorial);
         break;
       case Buttons.water:
-        if (lastWaterStamp != null &&
-            !DateTime.now()
-                .isAfter(lastWaterStamp!.add(const Duration(days: 1)))) {
+        final now = DateTime.now();
+        if (lastWaterStamp != null && now.isBefore(lastWaterStamp!)) {
           Get.showSnackbar(
             GetSnackBar(
               title: 'Already water the plant',
@@ -344,12 +356,14 @@ class IotController extends GetxController {
           return;
         }
 
+        waterCount.value = waterCount.value + 1;
         lastWaterStamp = DateTime.now();
         IotController.to.addCoins(
           amount: 500,
-          dateTime: DateTime.now(),
+          dateTime: DateTime(now.year, now.month, now.day + 1),
           waterCount: waterCount.value,
         );
+        refresh();
 
         Get.showSnackbar(
           GetSnackBar(
