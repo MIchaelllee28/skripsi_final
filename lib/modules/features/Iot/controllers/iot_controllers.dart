@@ -37,7 +37,7 @@ class IotController extends GetxController {
   Timer? timer;
 
 // Single database reference for all sensor data
-  final database = FirebaseDatabase.instance.ref('test');
+  final database = FirebaseDatabase.instance.ref('ESP32');
   late Rx<SensorData> sensorData;
 
   // audio player
@@ -84,22 +84,35 @@ class IotController extends GetxController {
 
     //inisialisasi sensor data dengan default value
     sensorData = SensorData(
-      soil1: 0,
-      soil2: 0,
-      soil3: 0,
-      temp: 0,
-      liquid: true,
-      relay1: true,
-      relay2: true,
-      relay3: true,
+      sensorT: SensorT(
+        hum: 0,
+        temp: 0,
+        ec: 0,
+        ph: 0,
+        n: 0,
+        p: 0,
+        k: 0,
+      ),
+      sensorA: SensorA(
+        cf: 0,
+        ph: 0,
+        humid: 0,
+        suhu: 0,
+      ),
     ).obs;
 
     //listener for all sensor data
     database.onValue.listen((event) {
+      print('🔥 Firebase event received');
       if (event.snapshot.value != null) {
+        print('📦 Raw data: ${event.snapshot.value}');
         final data = event.snapshot.value as Map<dynamic, dynamic>;
-
+        print('📊 Parsed data: $data');
         sensorData.value = SensorData.fromJson(data);
+        print(
+            '✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
+      } else {
+        print('❌ Firebase data is null');
       }
     });
 
@@ -204,35 +217,40 @@ class IotController extends GetxController {
     });
   }
 
-// metode mengubah relay
-  void toogleRelay1() {
-    database.update({'relay1': !sensorData.value.relay1});
-  }
+//TODO : add proper function
+// // metode mengubah relay
+//   void toogleRelay1() {
+//     database.update({'relay1': !sensorData.value.relay1});
+//   }
 
-  void toogleRelay2() {
-    database.update({'relay2': !sensorData.value.relay2});
-  }
+//   void toogleRelay2() {
+//     database.update({'relay2': !sensorData.value.relay2});
+//   }
 
-  void toogleRelay3() {
-    database.update({'relay3': !sensorData.value.relay3});
-    Get.dialog(const SuccessDialog());
-  }
+//   void toogleRelay3() {
+//     database.update({'relay3': !sensorData.value.relay3});
+//     Get.dialog(const SuccessDialog());
+//   }
 
-// Getter for the relay
-  bool get relayValue1 => sensorData.value.relay1;
-  bool get relayValue2 => sensorData.value.relay2;
-  bool get relayValue3 => sensorData.value.relay3;
+// Getter for soil sensor (sensorT)
+  double get soilHumidity => sensorData.value.sensorT.hum;
+  double get soilTemp => sensorData.value.sensorT.temp;
+  int get soilEC => sensorData.value.sensorT.ec;
+  int get soilPH => sensorData.value.sensorT.ph;
+  int get soilN => sensorData.value.sensorT.n;
+  int get soilP => sensorData.value.sensorT.p;
+  int get soilK => sensorData.value.sensorT.k;
 
-// Getter for the soil
-  int get soilValue1 => sensorData.value.soil1;
-  int get soilValue2 => sensorData.value.soil2;
-  int get soilValue3 => sensorData.value.soil3;
+// Getter for air/water sensor (sensorA)
+  int get airCO2 => sensorData.value.sensorA.cf;
+  double get airPH => sensorData.value.sensorA.ph;
+  int get airHumidity => sensorData.value.sensorA.humid;
+  double get airTemp => sensorData.value.sensorA.suhu;
 
-// Getter for the temp
-  int get tempValue => sensorData.value.temp;
-
-// Getter for the liquid
-  bool get liquidValue => sensorData.value.liquid;
+// Keep old getters for backward compatibility (temporary)
+  int get soilValue1 => soilHumidity.toInt();
+  int get tempValue => soilTemp.toInt();
+  bool get liquidValue => airHumidity > 50; // example logic
 
   void addCoins(
       {required int amount, DateTime? dateTime, int? waterCount}) async {

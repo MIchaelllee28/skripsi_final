@@ -42,13 +42,12 @@ class WaterDetailsDialog extends StatelessWidget {
             Obx(() => Column(
                   children: [
                     _buildDataRow('1. CO₂ Concentration',
-                        '${IotController.to.soilValue1} ppm'),
+                        '${IotController.to.airCO2} ppm'),
+                    _buildDataRow('2. Soil pH', '${IotController.to.airPH}'),
                     _buildDataRow(
-                        '2. Soil pH', '${IotController.to.soilValue2}'),
+                        '3. Air Humidity', '${IotController.to.airHumidity}%'),
                     _buildDataRow(
-                        '3. Air Humidity', '${IotController.to.soilValue3}%'),
-                    _buildDataRow(
-                        '4. Temperature', '${IotController.to.tempValue}°C'),
+                        '4. Temperature', '${IotController.to.airTemp}°C'),
                   ],
                 )),
           ],

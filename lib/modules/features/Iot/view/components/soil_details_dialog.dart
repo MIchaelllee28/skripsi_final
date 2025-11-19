@@ -42,16 +42,19 @@ class SoilDetailsDialog extends StatelessWidget {
             Obx(() => Column(
                   children: [
                     _buildDataRow(
-                        '1. Humidity', '${IotController.to.soilValue1}%'),
+                        '1. Humidity', '${IotController.to.soilHumidity}%'),
                     _buildDataRow(
-                        '2. Temperature', '${IotController.to.tempValue}°C'),
+                        '2. Temperature', '${IotController.to.soilTemp}°C'),
                     _buildDataRow('3. Electrical Conductivity',
-                        '${IotController.to.soilValue2} mS/cm'),
+                        '${IotController.to.soilEC} mS/cm'),
                     _buildDataRow(
-                        '4. Acidity (pH)', '${IotController.to.soilValue3}'),
-                    _buildDataRow('5. Nitrogen (N)', '120 mg/kg'),
-                    _buildDataRow('6. Phosphorus (P)', '45 mg/kg'),
-                    _buildDataRow('7. Potassium (K)', '180 mg/kg'),
+                        '4. Acidity (pH)', '${IotController.to.soilPH}'),
+                    _buildDataRow(
+                        '5. Nitrogen (N)', '${IotController.to.soilN} mg/kg'),
+                    _buildDataRow(
+                        '6. Phosphorus (P)', '${IotController.to.soilP} mg/kg'),
+                    _buildDataRow(
+                        '7. Potassium (K)', '${IotController.to.soilK} mg/kg'),
                   ],
                 )),
           ],

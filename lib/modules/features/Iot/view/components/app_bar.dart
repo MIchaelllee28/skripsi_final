@@ -18,7 +18,8 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
             width: 12,
           ),
           TextButton.icon(
-            onPressed: IotController.to.toogleRelay1,
+            //TODO : add proper function
+            onPressed: () {}, //IotController.to.toogleRelay1,
             icon: Image.asset("assets/images/iot/app_bar/coin.png", height: 27),
             label: Text(
               IotController.to.coinValue.value.toString(),
@@ -40,7 +41,7 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () => Get.dialog(const SoilDetailsDialog()),
             icon: Image.asset("assets/images/iot/app_bar/soil.png", height: 27),
             label: Text(
-              '${IotController.to.soilValue1}',
+              '${IotController.to.soilHumidity.toStringAsFixed(1)}%',
               style: GoogleTextStyle.fw400.copyWith(
                 fontSize: 25,
                 color: const Color.fromARGB(

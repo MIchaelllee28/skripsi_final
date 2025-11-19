@@ -1,49 +1,101 @@
 class SensorData {
-  final int soil1;
-  final int soil2;
-  final int soil3;
-  final int temp;
-  final bool liquid;
-  final bool relay1;
-  final bool relay2;
-  final bool relay3;
+  final SensorT sensorT;
+  final SensorA sensorA;
 
   SensorData({
-    required this.soil1,
-    required this.soil2,
-    required this.soil3,
-    required this.temp,
-    required this.liquid,
-    required this.relay1,
-    required this.relay2,
-    required this.relay3,
+    required this.sensorT,
+    required this.sensorA,
   });
 
-  // Convert from Firebase JSON to SensorData object
   factory SensorData.fromJson(Map<dynamic, dynamic> json) {
     return SensorData(
-      soil1: json['soil1'] ?? 0,
-      soil2: json['soil2'] ?? 0,
-      soil3: json['soil3'] ?? 0,
-      temp: json['temp'] ?? 0,
-      liquid: json['liquid'] ?? true,
-      relay1: json['relay1'] ?? true,
-      relay2: json['relay2'] ?? true,
-      relay3: json['relay3'] ?? true,
+      sensorT: SensorT.fromJson(json['sensorT'] ?? {}),
+      sensorA: SensorA.fromJson(json['sensorA'] ?? {}),
     );
   }
 
-  // Convert SensorData object to Firebase JSON
   Map<String, dynamic> toJson() {
     return {
-      'soil1': soil1,
-      'soil2': soil2,
-      'soil3': soil3,
+      'sensorT': sensorT.toJson(),
+      'sensorA': sensorA.toJson(),
+    };
+  }
+}
+
+// Soil/Tanah Sensor Data
+class SensorT {
+  final double hum; // humidity
+  final double temp; // temperature
+  final int ec; // electrical conductivity
+  final int ph; // acidity
+  final int n; // nitrogen
+  final int p; // phosphorus
+  final int k; // potassium
+
+  SensorT({
+    required this.hum,
+    required this.temp,
+    required this.ec,
+    required this.ph,
+    required this.n,
+    required this.p,
+    required this.k,
+  });
+
+  factory SensorT.fromJson(Map<dynamic, dynamic> json) {
+    return SensorT(
+      hum: (json['hum'] ?? 0).toDouble(),
+      temp: (json['temp'] ?? 0).toDouble(),
+      ec: json['ec'] ?? 0,
+      ph: json['ph'] ?? 0,
+      n: json['n'] ?? 0,
+      p: json['p'] ?? 0,
+      k: json['k'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'hum': hum,
       'temp': temp,
-      'liquid': liquid,
-      'relay1': relay1,
-      'relay2': relay2,
-      'relay3': relay3,
+      'ec': ec,
+      'ph': ph,
+      'n': n,
+      'p': p,
+      'k': k,
+    };
+  }
+}
+
+// Air/Water Sensor Data
+class SensorA {
+  final int cf; // CO2 concentration
+  final double ph; // pH
+  final int humid; // humidity
+  final double suhu; // temperature
+
+  SensorA({
+    required this.cf,
+    required this.ph,
+    required this.humid,
+    required this.suhu,
+  });
+
+  factory SensorA.fromJson(Map<dynamic, dynamic> json) {
+    return SensorA(
+      cf: json['cf'] ?? 0,
+      ph: (json['ph'] ?? 0).toDouble(),
+      humid: json['humid'] ?? 0,
+      suhu: (json['suhu'] ?? 0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cf': cf,
+      'ph': ph,
+      'humid': humid,
+      'suhu': suhu,
     };
   }
 }
