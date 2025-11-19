@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/shared/styles/google_text_style.dart';
+import 'package:trainee/modules/features/Iot/view/components/soil_details_dialog.dart';
+import 'package:trainee/modules/features/Iot/view/components/water_details_dialog.dart';
 
 class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
   const AppBarIot({super.key});
@@ -35,10 +37,10 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
             width: 12,
           ),
           TextButton.icon(
-            onPressed: IotController.to.toogleRelay2,
+            onPressed: () => Get.dialog(const SoilDetailsDialog()),
             icon: Image.asset("assets/images/iot/app_bar/soil.png", height: 27),
             label: Text(
-              '${IotController.to.soilValue1.value}',
+              '${IotController.to.soilValue1}',
               style: GoogleTextStyle.fw400.copyWith(
                 fontSize: 25,
                 color: const Color.fromARGB(
@@ -54,10 +56,10 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
             width: 12,
           ),
           TextButton.icon(
-            onPressed: IotController.to.toogleRelay3,
+            onPressed: () => Get.dialog(const WaterDetailsDialog()),
             icon:
                 Image.asset("assets/images/iot/app_bar/water.png", height: 27),
-            label: IotController.to.liquidValue.value == true
+            label: IotController.to.liquidValue == true
                 ? Text(
                     "Good",
                     style: GoogleTextStyle.fw400.copyWith(
@@ -79,21 +81,7 @@ class AppBarIot extends StatelessWidget implements PreferredSizeWidget {
                   ),
           ),
           const SizedBox(
-            width: 12,
-          ),
-          TextButton.icon(
-            onPressed: () {},
-            icon: Image.asset("assets/images/iot/app_bar/temp.png", height: 27),
-            label: Text(
-              '${IotController.to.tempValue.value}',
-              style: GoogleTextStyle.fw400.copyWith(
-                fontSize: 25,
-                color: const Color.fromARGB(255, 217, 81, 13),
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 12,
+            width: 80,
           ),
         ],
       ),

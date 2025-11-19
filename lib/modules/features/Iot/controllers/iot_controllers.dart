@@ -13,6 +13,7 @@ import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/tuto
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/water_button.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
+import 'package:trainee/modules/global_models/sensor_data_model.dart';
 
 import '../../shop/view/components/success_dialog.dart';
 
@@ -35,29 +36,9 @@ class IotController extends GetxController {
   RxInt hintIndex = 0.obs;
   Timer? timer;
 
-  // pengaturan soil moisture
-  final databaseSoil1 = FirebaseDatabase.instance.ref('test/soil1');
-  final databaseSoil2 = FirebaseDatabase.instance.ref('test/soil2');
-  final databaseSoil3 = FirebaseDatabase.instance.ref('test/soil3');
-  final RxInt _soilValue1 = 0.obs;
-  final RxInt _soilValue2 = 0.obs;
-  final RxInt _soilValue3 = 0.obs;
-
-  // pengaturan light intensity
-  final databaseTemp = FirebaseDatabase.instance.ref('test/temp');
-  final RxInt _tempValue = 0.obs;
-
-  // pengaturan liquid level
-  final databaseLiquid = FirebaseDatabase.instance.ref('test/liquid');
-  final RxBool _liquidValue = true.obs;
-
-  // pengaturan relay
-  final databaseRelay1 = FirebaseDatabase.instance.ref('test/relay1');
-  final databaseRelay2 = FirebaseDatabase.instance.ref('test/relay2');
-  final databaseRelay3 = FirebaseDatabase.instance.ref('test/relay3');
-  final RxBool _relayValue1 = true.obs;
-  final RxBool _relayValue2 = true.obs;
-  final RxBool _relayValue3 = true.obs;
+// Single database reference for all sensor data
+  final database = FirebaseDatabase.instance.ref('test');
+  late Rx<SensorData> sensorData;
 
   // audio player
   late AudioPlayer player = AudioPlayer();
@@ -101,36 +82,25 @@ class IotController extends GetxController {
     // Start the player as soon as the app is displayed.
     getMusic();
 
-    // init soil moisture
-    databaseSoil1.onValue.listen((event) {
-      _soilValue1.value = event.snapshot.value as int;
-    });
-    databaseSoil2.onValue.listen((event) {
-      _soilValue2.value = event.snapshot.value as int;
-    });
-    databaseSoil3.onValue.listen((event) {
-      _soilValue3.value = event.snapshot.value as int;
-    });
+    //inisialisasi sensor data dengan default value
+    sensorData = SensorData(
+      soil1: 0,
+      soil2: 0,
+      soil3: 0,
+      temp: 0,
+      liquid: true,
+      relay1: true,
+      relay2: true,
+      relay3: true,
+    ).obs;
 
-    // init temp
-    databaseTemp.onValue.listen((event) {
-      _tempValue.value = event.snapshot.value as int;
-    });
+    //listener for all sensor data
+    database.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>;
 
-    // init liquid
-    databaseLiquid.onValue.listen((event) {
-      _liquidValue.value = event.snapshot.value as bool;
-    });
-
-    // init relay
-    databaseRelay1.onValue.listen((event) {
-      _relayValue1.value = event.snapshot.value as bool;
-    });
-    databaseRelay2.onValue.listen((event) {
-      _relayValue2.value = event.snapshot.value as bool;
-    });
-    databaseRelay3.onValue.listen((event) {
-      _relayValue3.value = event.snapshot.value as bool;
+        sensorData.value = SensorData.fromJson(data);
+      }
     });
 
     listBackground.value = await HiveService.to
@@ -234,35 +204,35 @@ class IotController extends GetxController {
     });
   }
 
-  // metode mengubah relay
+// metode mengubah relay
   void toogleRelay1() {
-    databaseRelay1.set(!_relayValue1.value);
+    database.update({'relay1': !sensorData.value.relay1});
   }
 
   void toogleRelay2() {
-    databaseRelay2.set(!_relayValue2.value);
+    database.update({'relay2': !sensorData.value.relay2});
   }
 
   void toogleRelay3() {
-    databaseRelay3.set(!_relayValue3.value);
+    database.update({'relay3': !sensorData.value.relay3});
     Get.dialog(const SuccessDialog());
   }
 
-  // Getter for the relay
-  RxBool get relayValue1 => _relayValue1;
-  RxBool get relayValue2 => _relayValue2;
-  RxBool get relayValue3 => _relayValue3;
+// Getter for the relay
+  bool get relayValue1 => sensorData.value.relay1;
+  bool get relayValue2 => sensorData.value.relay2;
+  bool get relayValue3 => sensorData.value.relay3;
 
-  // Getter for the soil
-  RxInt get soilValue1 => _soilValue1;
-  RxInt get soilValue2 => _soilValue2;
-  RxInt get soilValue3 => _soilValue3;
+// Getter for the soil
+  int get soilValue1 => sensorData.value.soil1;
+  int get soilValue2 => sensorData.value.soil2;
+  int get soilValue3 => sensorData.value.soil3;
 
-  // Getter for the light
-  RxInt get tempValue => _tempValue;
+// Getter for the temp
+  int get tempValue => sensorData.value.temp;
 
-  // Getter for the liquid
-  RxBool get liquidValue => _liquidValue;
+// Getter for the liquid
+  bool get liquidValue => sensorData.value.liquid;
 
   void addCoins(
       {required int amount, DateTime? dateTime, int? waterCount}) async {
