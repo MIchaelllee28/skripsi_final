@@ -14,6 +14,7 @@ import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/wate
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
 import 'package:trainee/modules/global_models/sensor_data_model.dart';
+import 'package:trainee/modules/global_models/control_data_model.dart';
 
 import '../../shop/view/components/success_dialog.dart';
 
@@ -39,6 +40,9 @@ class IotController extends GetxController {
 // Single database reference for all sensor data
   final database = FirebaseDatabase.instance.ref('ESP32');
   late Rx<SensorData> sensorData;
+
+//control actuator
+  late Rx<ControlData> controlData;
 
   // audio player
   late AudioPlayer player = AudioPlayer();
@@ -113,6 +117,22 @@ class IotController extends GetxController {
             '✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
       } else {
         print('❌ Firebase data is null');
+      }
+    });
+
+    //inisialisasi control data
+    controlData = ControlData(
+      lampu: 0,
+      phdown: 0,
+      phup: 0,
+      pompa: 0,
+    ).obs;
+
+    //listener for control data
+    FirebaseDatabase.instance.ref('AKTUATOR').onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>;
+        controlData.value = ControlData.fromJson(data);
       }
     });
 
@@ -232,6 +252,41 @@ class IotController extends GetxController {
 //     Get.dialog(const SuccessDialog());
 //   }
 
+// Set specific values (0 to 100)
+  Future<void> setLampValue(int value) async {
+    final clampedValue = value.clamp(0, 100);
+    await FirebaseDatabase.instance
+        .ref('AKTUATOR')
+        .update({'lampu': clampedValue});
+  }
+
+  Future<void> setPhDownValue(int value) async {
+    final clampedValue = value.clamp(0, 100);
+    await FirebaseDatabase.instance
+        .ref('AKTUATOR')
+        .update({'phdown': clampedValue});
+  }
+
+  Future<void> setPhUpValue(int value) async {
+    final clampedValue = value.clamp(0, 100);
+    await FirebaseDatabase.instance
+        .ref('AKTUATOR')
+        .update({'phup': clampedValue});
+  }
+
+  Future<void> setPumpValue(int value) async {
+    final clampedValue = value.clamp(0, 100);
+    await FirebaseDatabase.instance
+        .ref('AKTUATOR')
+        .update({'pompa': clampedValue});
+  }
+
+  // Getters for control states
+  int get lampState => controlData.value.lampu;
+  int get phDownState => controlData.value.phdown;
+  int get phUpState => controlData.value.phup;
+  int get pumpState => controlData.value.pompa;
+
 // Getter for soil sensor (sensorT)
   double get soilHumidity => sensorData.value.sensorT.hum;
   double get soilTemp => sensorData.value.sensorT.temp;
@@ -286,6 +341,39 @@ class IotController extends GetxController {
     } else if (toogleButton.value <= 5 && direction == Directions.right) {
       toogleButton.value++;
     }
+  }
+
+  //monitoring logic for the pump
+  Timer? pumpTimer;
+
+  void startPumpMonitoring() {
+    // Cancel any existing timer
+    pumpTimer?.cancel();
+
+    // Start monitoring pump value
+    pumpTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (controlData.value.pompa > 0) {
+        // Pump is running, start 10-second countdown
+        timer.cancel();
+        startWaterCountdown();
+      }
+    });
+  }
+
+  void startWaterCountdown() {
+    Timer(Duration(seconds: 10), () {
+      if (controlData.value.pompa > 0) {
+        // Pump still running after 10 seconds, trigger water logic
+        buttonMove(Buttons.water);
+        Get.back(); // Close the dialog
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    pumpTimer?.cancel();
+    super.onClose();
   }
 
   Widget getButtons(int finalButton) {

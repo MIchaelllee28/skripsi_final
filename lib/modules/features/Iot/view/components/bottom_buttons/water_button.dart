@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:trainee/modules/features/Iot/controllers/iot_controllers.dart';
 import 'package:trainee/shared/styles/google_text_style.dart';
+
+import '../actuator_dialog.dart';
 
 class WaterButton extends StatelessWidget {
   const WaterButton({super.key});
@@ -17,7 +21,11 @@ class WaterButton extends StatelessWidget {
             width: 80,
             child: IconButton(
               onPressed: () {
-                IotController.to.buttonMove(Buttons.water);
+                // Show the control dialog instead of direct water logic
+                Get.dialog(ActuatorControlDialog());
+
+                // Start monitoring pump for auto-watering
+                IotController.to.startPumpMonitoring();
               },
               icon: Image.asset(
                 "assets/images/iot/buttons/water_button.png",
