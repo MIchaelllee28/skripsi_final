@@ -84,21 +84,34 @@ class ShopController extends GetxController {
 
       IotController.to.reduceCoins(price);
 
-      // Get items to save
-      var itemToSave = shopItems.firstWhere((item) => item['id'] == itemId);
+      // Get items to save and mark as owned
+      var itemToSave = Map<String, dynamic>.from(
+          shopItems.firstWhere((item) => item['id'] == itemId));
+      itemToSave['status'] = 1; // Mark as owned
 
       // Get existing items
       List existingItems = HiveService.to.read('shopItems') ?? [];
-      Set existingSelectedItem = HiveService.to.read('selectedItems') ?? {};
-      IotController.to.listBackground.add(itemToSave);
-      existingItems.add(itemToSave);
+
+      // Check if item already exists in the list
+      final existingIndex =
+          existingItems.indexWhere((item) => item['id'] == itemId);
+
+      if (existingIndex == -1) {
+        // Item doesn't exist, add it
+        existingItems.add(itemToSave);
+      } else {
+        // Item exists, update its status
+        existingItems[existingIndex]['status'] = 1;
+      }
+
+      // Add to background list if it's a background item
+      if (itemToSave['kategori'] == 'background') {
+        IotController.to.listBackground.add(itemToSave);
+      }
 
       // Save updated list
       HiveService.to.save('shopItems', existingItems);
-      HiveService.to.save(
-        'selectedItems',
-        existingSelectedItem.add(existingItems),
-      );
+
       Get.dialog(const SuccessDialog());
 
       // Refetch all items to refresh the lists

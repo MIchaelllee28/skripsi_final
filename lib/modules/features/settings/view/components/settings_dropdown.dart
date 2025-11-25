@@ -82,7 +82,15 @@ class SettingsDropdown extends StatelessWidget {
   String? _getSelectedValue(String keyDrop) {
     final selectedItem = SettingsController.to.selectedItem[keyDrop];
     if (selectedItem != null && selectedItem['id'] != null) {
-      return selectedItem['id'].toString(); // Return the ID as string
+      final selectedId = selectedItem['id'].toString();
+
+      // Check if the selected item exists in the options list
+      final exists =
+          options.any((element) => element['id'].toString() == selectedId);
+
+      if (exists) {
+        return selectedId; // Return the ID as string
+      }
     }
     return null; // Return null for the "Select" option
   }
