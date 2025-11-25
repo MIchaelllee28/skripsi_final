@@ -88,6 +88,10 @@ class IotController extends GetxController {
 
     //init selected items
     selectedItems.value = HiveService.to.selectedBox.get('selectedItems') ?? {};
+
+    // Initialize default settings if not set
+    await _initializeDefaultSettings();
+
     iotLogic.value = HiveService.to.iotLogicBox.get('iot_logic') ?? {};
     coinValue.value = iotLogic['coin'];
     waterCount.value = iotLogic['water_count'] ?? 1;
@@ -181,6 +185,49 @@ class IotController extends GetxController {
 
   final RxList listBackground = [].obs;
   final RxInt currentIndexBg = 0.obs;
+
+  // Initialize default settings if they don't exist
+  Future<void> _initializeDefaultSettings() async {
+    bool needsSave = false;
+
+    // Default background
+    if (selectedItems['background'] == null) {
+      selectedItems['background'] = {
+        'id': 'default_1',
+        'name': 'Calmy Grey',
+        'deskripsi': '#FFFFFF',
+      };
+      needsSave = true;
+    }
+
+    // Default pot - you should replace these with your actual default values
+    if (selectedItems['pot'] == null) {
+      selectedItems['pot'] = {
+        'id': 'default_pot',
+        'name': 'Default Pot',
+        'deskripsi':
+            'assets/images/pot_default.png', // Update with your default pot path
+      };
+      needsSave = true;
+    }
+
+    // Default music - you should replace these with your actual default values
+    if (selectedItems['music'] == null) {
+      selectedItems['music'] = {
+        'id': 'default_music',
+        'name': 'Default Music',
+        'deskripsi':
+            'music/default_music.mp3', // Update with your default music path
+      };
+      needsSave = true;
+    }
+
+    // Save defaults if any were set
+    if (needsSave) {
+      await HiveService.to.selectedBox.put('selectedItems', selectedItems);
+    }
+  }
+
   Future changeIndex(String code) async {
     currentIndexBg.value = code == 'plus'
         ? (currentIndexBg.value + 1) % listBackground.length

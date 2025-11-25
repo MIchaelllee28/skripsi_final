@@ -26,8 +26,57 @@ class SettingsController extends GetxController {
     itemsOwned.value = await HiveService.to.read('shopItems') ?? [].obs;
     selectedItem.value =
         await HiveService.to.selectedBox.get('selectedItems') ?? {}.obs;
+
+    // Ensure default items are always available in itemsOwned
+    await _ensureDefaultItems();
+
     initItems();
     super.onInit();
+  }
+
+  // Ensure default items are always in the owned list
+  Future<void> _ensureDefaultItems() async {
+    List<Map<String, dynamic>> defaultItems = [
+      {
+        'id': 'default_1',
+        'nama': 'Calmy Grey',
+        'kategori': 'background',
+        'deskripsi': '#FFFFFF',
+        'status': 1,
+        'harga': 0,
+      },
+      // Add your default pot here
+      {
+        'id': 'default_pot',
+        'nama': 'Default Pot',
+        'kategori': 'pot',
+        'deskripsi': 'assets/images/pot_default.png', // Update with actual path
+        'status': 1,
+        'harga': 0,
+      },
+      // Add your default music here
+      {
+        'id': 'default_music',
+        'nama': 'Default Music',
+        'kategori': 'musik',
+        'deskripsi': 'music/default_music.mp3', // Update with actual path
+        'status': 1,
+        'harga': 0,
+      },
+    ];
+
+    bool needsSave = false;
+    for (var defaultItem in defaultItems) {
+      bool exists = itemsOwned.any((item) => item['id'] == defaultItem['id']);
+      if (!exists) {
+        itemsOwned.add(defaultItem);
+        needsSave = true;
+      }
+    }
+
+    if (needsSave) {
+      await HiveService.to.save('shopItems', itemsOwned);
+    }
   }
 
   Future<void> initItems() async {
