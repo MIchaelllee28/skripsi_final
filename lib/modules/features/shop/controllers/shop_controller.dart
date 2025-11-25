@@ -5,6 +5,7 @@ import 'package:trainee/modules/features/shop/view/components/container/shop_bod
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_musik.dart';
 import 'package:trainee/modules/features/shop/view/components/container/shop_body_pot.dart';
 import 'package:trainee/modules/features/shop/view/components/success_dialog.dart';
+import 'package:trainee/modules/features/shop/view/components/insufficient_funds_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:trainee/utils/services/hive_service.dart';
 
@@ -72,6 +73,12 @@ class ShopController extends GetxController {
           shopItems.firstWhere((element) => element['id'] == itemId);
       final price = itemHarga['harga'] as int;
       if (IotController.to.coinValue.value < price) {
+        Get.dialog(
+          InsufficientFundsDialog(
+            requiredCoins: price,
+            currentCoins: IotController.to.coinValue.value,
+          ),
+        );
         return;
       }
 
