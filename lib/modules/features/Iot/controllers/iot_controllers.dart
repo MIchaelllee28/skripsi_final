@@ -136,11 +136,27 @@ class IotController extends GetxController {
       }
     });
 
-    listBackground.value = await HiveService.to
+    // Get default backgrounds that user always has access to
+    final defaultBackgrounds = [
+      {
+        "nama": "Calmy Grey",
+        "kategori": "background",
+        "deskripsi": "#FFFFFF",
+        "status": 1,
+        "id": "default_1"
+      },
+    ];
+
+    // Get purchased backgrounds from shop
+    final purchasedBackgrounds = HiveService.to
             .read('shopItems')
-            .where((item) => item['kategori'] == 'background')
+            ?.where((item) => item['kategori'] == 'background')
             .toList() ??
         [];
+
+    // Merge default and purchased backgrounds
+    listBackground.value = [...defaultBackgrounds, ...purchasedBackgrounds];
+
     currentIndexBg.value = listBackground.indexWhere(
         (element) => element['nama'] == selectedItems['background']?['name']);
   }
