@@ -41,10 +41,34 @@ class IotController extends GetxController {
 
 // Single database reference for all sensor data
   final database = FirebaseDatabase.instance.ref('ESP32');
-  late Rx<SensorData> sensorData;
+
+  // Initialize sensorData with default values to prevent LateInitializationError
+  Rx<SensorData> sensorData = SensorData(
+    sensorT: SensorT(
+      hum: 0,
+      temp: 0,
+      ec: 0,
+      ph: 0,
+      n: 0,
+      p: 0,
+      k: 0,
+    ),
+    sensorA: SensorA(
+      cf: 0,
+      ph: 0,
+      humid: 0,
+      suhu: 0,
+    ),
+  ).obs;
 
 //control actuator
-  late Rx<ControlData> controlData;
+  // Initialize controlData with default values to prevent LateInitializationError
+  Rx<ControlData> controlData = ControlData(
+    lampu: 0,
+    phdown: 0,
+    phup: 0,
+    pompa: 0,
+  ).obs;
 
   // audio player
   late AudioPlayer player = AudioPlayer();
@@ -88,25 +112,6 @@ class IotController extends GetxController {
     // Start the player as soon as the app is displayed.
     getMusic();
 
-    //inisialisasi sensor data dengan default value
-    sensorData = SensorData(
-      sensorT: SensorT(
-        hum: 0,
-        temp: 0,
-        ec: 0,
-        ph: 0,
-        n: 0,
-        p: 0,
-        k: 0,
-      ),
-      sensorA: SensorA(
-        cf: 0,
-        ph: 0,
-        humid: 0,
-        suhu: 0,
-      ),
-    ).obs;
-
     //listener for all sensor data
     database.onValue.listen((event) {
       print('🔥 Firebase event received');
@@ -121,14 +126,6 @@ class IotController extends GetxController {
         print('❌ Firebase data is null');
       }
     });
-
-    //inisialisasi control data
-    controlData = ControlData(
-      lampu: 0,
-      phdown: 0,
-      phup: 0,
-      pompa: 0,
-    ).obs;
 
     //listener for control data
     FirebaseDatabase.instance.ref('AKTUATOR').onValue.listen((event) {
