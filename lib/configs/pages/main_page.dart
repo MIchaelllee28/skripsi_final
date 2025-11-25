@@ -17,6 +17,8 @@ import 'package:trainee/modules/features/tutorial/view/ui/tutorial_view.dart';
 import 'package:trainee/modules/features/shop/bindings/shop_bindings.dart';
 import 'package:trainee/modules/features/tutorial/bindings/tutorial_bindings.dart';
 import 'package:trainee/modules/features/settings/bindings/settings_bindings.dart';
+import 'package:trainee/modules/features/lucky_wheel/view/ui/lucky_wheel_view.dart';
+import 'package:trainee/modules/features/lucky_wheel/bindings/lucky_wheel_binding.dart';
 
 abstract class MainPage {
   static final main = [
@@ -67,6 +69,11 @@ abstract class MainPage {
       name: MainRoute.settings,
       page: () => const SettingsView(),
       binding: SettingsBindings(),
+    ),
+    GetPage(
+      name: MainRoute.luckyWheel,
+      page: () => const LuckyWheelView(),
+      binding: LuckyWheelBinding(),
     ),
   ];
 }

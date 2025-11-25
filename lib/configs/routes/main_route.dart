@@ -9,4 +9,5 @@ abstract class MainRoute {
   static const String tutorial = '/tutorial';
   static const String trophy = '/trophy';
   static const String settings = '/settings';
+  static const String luckyWheel = '/lucky-wheel';
 }

@@ -11,6 +11,7 @@ import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/shop
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/trophy_button.dart';
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/tutorial_button.dart';
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/water_button.dart';
+import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/lucky_wheel_button.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
 import 'package:trainee/modules/global_models/sensor_data_model.dart';
@@ -27,6 +28,7 @@ enum Buttons {
   trophy,
   tutorial,
   water,
+  luckyWheel,
 }
 
 class IotController extends GetxController {
@@ -354,7 +356,7 @@ class IotController extends GetxController {
   void changeButton(Directions direction) {
     if (toogleButton.value >= 0 && direction == Directions.left) {
       toogleButton.value--;
-    } else if (toogleButton.value <= 5 && direction == Directions.right) {
+    } else if (toogleButton.value <= 6 && direction == Directions.right) {
       toogleButton.value++;
     }
   }
@@ -407,6 +409,8 @@ class IotController extends GetxController {
         return const TutorialButton();
       case 5:
         return const WaterButton();
+      case 6:
+        return const LuckyWheelButton();
       default:
         return const HomeButton();
     }
@@ -428,6 +432,9 @@ class IotController extends GetxController {
         break;
       case Buttons.tutorial:
         Get.toNamed(MainRoute.tutorial);
+        break;
+      case Buttons.luckyWheel:
+        Get.toNamed(MainRoute.luckyWheel);
         break;
       case Buttons.water:
         final now = DateTime.now();
