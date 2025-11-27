@@ -200,24 +200,23 @@ class IotController extends GetxController {
       needsSave = true;
     }
 
-    // Default pot - you should replace these with your actual default values
+    // Default pot
     if (selectedItems['pot'] == null) {
       selectedItems['pot'] = {
         'id': 'default_pot',
         'name': 'Default Pot',
-        'deskripsi':
-            'assets/images/pot_default.png', // Update with your default pot path
+        'deskripsi': 'assets/images/iot/main_part/pot_basic.png',
       };
       needsSave = true;
+      print('🔧 Initialized default pot: ${selectedItems['pot']}');
     }
 
-    // Default music - you should replace these with your actual default values
+    // Default music
     if (selectedItems['music'] == null) {
       selectedItems['music'] = {
         'id': 'default_music',
-        'name': 'Default Music',
-        'deskripsi':
-            'music/default_music.mp3', // Update with your default music path
+        'name': 'Star Reaction',
+        'deskripsi': 'music/star_reaction.mp3',
       };
       needsSave = true;
     }
@@ -225,6 +224,7 @@ class IotController extends GetxController {
     // Save defaults if any were set
     if (needsSave) {
       await HiveService.to.selectedBox.put('selectedItems', selectedItems);
+      print('💾 Saved default settings to Hive');
     }
   }
 
@@ -269,18 +269,38 @@ class IotController extends GetxController {
   RxString potSkinPath = ''.obs;
 
   Future<void> getPotSkin() async {
-    final result = await selectedItems['pot']['deskripsi'];
-    potSkinPath.value = result;
+    try {
+      final result = selectedItems['pot']?['deskripsi'];
+      if (result != null && result.isNotEmpty) {
+        potSkinPath.value = result;
+        print('🎨 Pot skin loaded: $result');
+      } else {
+        potSkinPath.value = 'assets/images/iot/main_part/pot_basic.png';
+        print('⚠️ No pot skin found, using default');
+      }
+    } catch (e) {
+      print('❌ Error loading pot skin: $e');
+      potSkinPath.value = 'assets/images/iot/main_part/pot_basic.png';
+    }
   }
 
   //get the music
   RxString musicPath = ''.obs;
 
   Future<void> getMusic() async {
-    await player.stop();
-    final result = await selectedItems['music']['deskripsi'];
-    musicPath.value = result;
-    await player.play(AssetSource(musicPath.value), volume: 100);
+    try {
+      await player.stop();
+      final result = selectedItems['music']?['deskripsi'];
+      if (result != null && result.isNotEmpty) {
+        musicPath.value = result;
+        await player.play(AssetSource(musicPath.value), volume: 100);
+        print('🎵 Music playing: $result');
+      } else {
+        print('⚠️ No music selected');
+      }
+    } catch (e) {
+      print('❌ Error playing music: $e');
+    }
   }
 
   //fetch data hints untuk bottom body

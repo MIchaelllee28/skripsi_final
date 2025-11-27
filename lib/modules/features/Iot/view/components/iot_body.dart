@@ -42,11 +42,20 @@ class BodyIot extends StatelessWidget {
                     left: 0,
                     right: 0,
                     child: Obx(() => Image.asset(
-                          IotController.to.potSkinPath.value == ''
+                          IotController.to.potSkinPath.value.isEmpty
                               ? 'assets/images/iot/main_part/pot_basic.png'
                               : IotController.to.potSkinPath.value,
                           width: 130,
                           height: 150,
+                          errorBuilder: (context, error, stackTrace) {
+                            print(
+                                '❌ Failed to load pot image: ${IotController.to.potSkinPath.value}');
+                            return Image.asset(
+                              'assets/images/iot/main_part/pot_basic.png',
+                              width: 130,
+                              height: 150,
+                            );
+                          },
                         )),
                   ),
                   Positioned(

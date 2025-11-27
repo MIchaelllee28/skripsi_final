@@ -50,7 +50,8 @@ class SettingsController extends GetxController {
         'id': 'default_pot',
         'nama': 'Default Pot',
         'kategori': 'pot',
-        'deskripsi': 'assets/images/pot_default.png', // Update with actual path
+        'deskripsi':
+            'assets/images/iot/main_part/pot_basic.png', // Update with actual path
         'status': 1,
         'harga': 0,
       },
