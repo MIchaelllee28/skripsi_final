@@ -91,6 +91,12 @@ class IotController extends GetxController {
   Rx<ActuatorSuggestion?> aiSuggestion = Rx<ActuatorSuggestion?>(null);
   RxBool isLoadingAI = false.obs;
 
+  // Debounce timers for actuator updates
+  Timer? _lampDebounce;
+  Timer? _phDownDebounce;
+  Timer? _phUpDebounce;
+  Timer? _pumpDebounce;
+
   @override
   void onInit() async {
     super.onInit();
@@ -343,33 +349,88 @@ class IotController extends GetxController {
 //     Get.dialog(const SuccessDialog());
 //   }
 
-// Set specific values (0 to 100)
+// Set specific values (0 to 100) with debounce
   Future<void> setLampValue(int value) async {
     final clampedValue = value.clamp(0, 100);
-    await FirebaseDatabase.instance
-        .ref('AKTUATOR')
-        .update({'lampu': clampedValue});
+
+    // Cancel previous timer
+    _lampDebounce?.cancel();
+
+    // Update local state immediately for UI responsiveness
+    controlData.value = ControlData(
+      lampu: clampedValue,
+      phdown: controlData.value.phdown,
+      phup: controlData.value.phup,
+      pompa: controlData.value.pompa,
+    );
+
+    // Wait 300ms before sending to Firebase
+    _lampDebounce = Timer(const Duration(milliseconds: 300), () async {
+      print('🔦 Setting Lamp to: $clampedValue');
+      await FirebaseDatabase.instance
+          .ref('AKTUATOR')
+          .update({'lampu': clampedValue});
+    });
   }
 
   Future<void> setPhDownValue(int value) async {
     final clampedValue = value.clamp(0, 100);
-    await FirebaseDatabase.instance
-        .ref('AKTUATOR')
-        .update({'phdown': clampedValue});
+
+    _phDownDebounce?.cancel();
+
+    controlData.value = ControlData(
+      lampu: controlData.value.lampu,
+      phdown: clampedValue,
+      phup: controlData.value.phup,
+      pompa: controlData.value.pompa,
+    );
+
+    _phDownDebounce = Timer(const Duration(milliseconds: 300), () async {
+      print('🔻 Setting pH Down to: $clampedValue');
+      await FirebaseDatabase.instance
+          .ref('AKTUATOR')
+          .update({'phdown': clampedValue});
+    });
   }
 
   Future<void> setPhUpValue(int value) async {
     final clampedValue = value.clamp(0, 100);
-    await FirebaseDatabase.instance
-        .ref('AKTUATOR')
-        .update({'phup': clampedValue});
+
+    _phUpDebounce?.cancel();
+
+    controlData.value = ControlData(
+      lampu: controlData.value.lampu,
+      phdown: controlData.value.phdown,
+      phup: clampedValue,
+      pompa: controlData.value.pompa,
+    );
+
+    _phUpDebounce = Timer(const Duration(milliseconds: 300), () async {
+      print('🔺 Setting pH Up to: $clampedValue');
+      await FirebaseDatabase.instance
+          .ref('AKTUATOR')
+          .update({'phup': clampedValue});
+    });
   }
 
   Future<void> setPumpValue(int value) async {
     final clampedValue = value.clamp(0, 100);
-    await FirebaseDatabase.instance
-        .ref('AKTUATOR')
-        .update({'pompa': clampedValue});
+
+    _pumpDebounce?.cancel();
+
+    controlData.value = ControlData(
+      lampu: controlData.value.lampu,
+      phdown: controlData.value.phdown,
+      phup: controlData.value.phup,
+      pompa: clampedValue,
+    );
+
+    _pumpDebounce = Timer(const Duration(milliseconds: 300), () async {
+      print('💧 Setting Pump to: $clampedValue');
+      await FirebaseDatabase.instance
+          .ref('AKTUATOR')
+          .update({'pompa': clampedValue});
+    });
   }
 
   // Getters for control states
