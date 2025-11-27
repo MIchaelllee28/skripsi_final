@@ -14,10 +14,15 @@ import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/wate
 import 'package:trainee/modules/features/Iot/view/components/bottom_buttons/lucky_wheel_button.dart';
 import 'package:trainee/utils/services/dio_service.dart';
 import 'package:trainee/utils/services/hive_service.dart';
+import 'package:trainee/utils/services/gemini_services.dart';
 import 'package:trainee/modules/global_models/sensor_data_model.dart';
 import 'package:trainee/modules/global_models/control_data_model.dart';
+import 'package:trainee/modules/features/Iot/view/components/ai_loading_dialog.dart';
+import 'package:trainee/modules/features/Iot/view/components/ai_suggestion_dialog.dart';
+import 'package:trainee/modules/features/Iot/view/components/actuator_dialog.dart';
 
 import '../../shop/view/components/success_dialog.dart';
+import '../view/components/ai_suggestion_dialog.dart';
 
 enum Directions { left, right }
 
@@ -81,6 +86,10 @@ class IotController extends GetxController {
   RxInt coinValue = 0.obs;
   DateTime? lastWaterStamp;
   RxInt waterCount = 1.obs;
+
+  // AI Suggestions
+  Rx<ActuatorSuggestion?> aiSuggestion = Rx<ActuatorSuggestion?>(null);
+  RxBool isLoadingAI = false.obs;
 
   @override
   void onInit() async {
@@ -543,5 +552,92 @@ class IotController extends GetxController {
         );
         break;
     }
+  }
+
+  // AI Suggestion Methods
+  Future<void> getAISuggestions() async {
+    try {
+      isLoadingAI.value = true;
+
+      // Show loading dialog
+      Get.dialog(
+        const AILoadingDialog(),
+        barrierDismissible: false,
+      );
+
+      // Test API key first
+      print('🔍 Testing API key...');
+      await GeminiService.testApiKey();
+
+      final suggestion = await GeminiService.getActuatorSuggestions(
+        soilHumidity: soilHumidity,
+        soilTemp: soilTemp,
+        soilPH: soilPH,
+        soilEC: soilEC,
+        soilN: soilN,
+        soilP: soilP,
+        soilK: soilK,
+        airCO2: airCO2,
+        airHumidity: airHumidity,
+        airTemp: airTemp,
+        airPH: airPH,
+      );
+
+      // Close loading dialog
+      Get.back();
+
+      if (suggestion != null) {
+        aiSuggestion.value = suggestion;
+        Get.dialog(const AISuggestionDialog());
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to get AI suggestions. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      // Close loading dialog if still open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      print('Error getting AI suggestions: $e');
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoadingAI.value = false;
+    }
+  }
+
+  Future<void> applyAISuggestion(ActuatorSuggestion suggestion) async {
+    await setLampValue(suggestion.lampu);
+    await setPhDownValue(suggestion.phdown);
+    await setPhUpValue(suggestion.phup);
+    await setPumpValue(suggestion.pompa);
+
+    Get.back(); // Close AI suggestion dialog
+
+    // Show success message
+    Get.snackbar(
+      'Applied',
+      'AI suggestions applied successfully!',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      icon: const Icon(Icons.check_circle, color: Colors.white),
+      duration: const Duration(seconds: 2),
+    );
+
+    // Reopen actuator dialog after a short delay
+    await Future.delayed(const Duration(milliseconds: 300));
+    Get.dialog(const ActuatorControlDialog());
   }
 }
