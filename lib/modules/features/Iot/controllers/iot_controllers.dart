@@ -97,6 +97,24 @@ class IotController extends GetxController {
   Timer? _phUpDebounce;
   Timer? _pumpDebounce;
 
+  // Reset all actuators to 0
+  Future<void> resetAllActuators() async {
+    await setLampValue(0);
+    await setPhDownValue(0);
+    await setPhUpValue(0);
+    await setPumpValue(0);
+
+    Get.snackbar(
+      'Reset',
+      'All actuators set to 0%',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.orange,
+      colorText: Colors.white,
+      icon: const Icon(Icons.restart_alt, color: Colors.white),
+      duration: const Duration(seconds: 2),
+    );
+  }
+
   @override
   void onInit() async {
     super.onInit();

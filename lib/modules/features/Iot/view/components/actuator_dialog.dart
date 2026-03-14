@@ -45,7 +45,6 @@ class ActuatorControlDialog extends StatelessWidget {
                 ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
@@ -60,17 +59,37 @@ class ActuatorControlDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    'ACTUATOR PANEL',
-                    style: GoogleTextStyle.fw700.copyWith(
-                      fontSize: 22,
-                      color: Colors.white,
-                      shadows: [
-                        const Shadow(
-                          color: Colors.black45,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
+                  Expanded(
+                    child: Text(
+                      'ACTUATOR PANEL',
+                      style: GoogleTextStyle.fw700.copyWith(
+                        fontSize: 22,
+                        color: Colors.white,
+                        shadows: [
+                          const Shadow(
+                            color: Colors.black45,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Reset button
+                  GestureDetector(
+                    onTap: () => IotController.to.resetAllActuators(),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(8),
+                        border:
+                            Border.all(color: Colors.orange.shade200, width: 2),
+                      ),
+                      child: const Icon(
+                        Icons.restart_alt,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ],
