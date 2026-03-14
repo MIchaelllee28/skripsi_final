@@ -135,6 +135,34 @@ class AISuggestionDialog extends StatelessWidget {
                     _buildValueRow('🔻 pH Down', suggestion.phdown, Colors.red),
                     _buildValueRow('🔺 pH Up', suggestion.phup, Colors.teal),
                     _buildValueRow('💧 Pump', suggestion.pompa, Colors.blue),
+
+                    const SizedBox(height: 12),
+                    
+                    if (suggestion.durationSeconds > 0) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.purple.shade200),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.timer, color: Colors.purple.shade700, size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Auto-reset after ${suggestion.durationSeconds} seconds',
+                                style: GoogleTextStyle.fw600.copyWith(
+                                  fontSize: 14,
+                                  color: Colors.purple.shade800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

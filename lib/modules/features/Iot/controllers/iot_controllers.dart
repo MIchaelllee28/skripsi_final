@@ -50,10 +50,10 @@ class IotController extends GetxController {
   // Initialize sensorData with default values to prevent LateInitializationError
   Rx<SensorData> sensorData = SensorData(
     sensorT: SensorT(
-      hum: 0,
-      temp: 0,
+      hum: 0.0,
+      temp: 0.0,
       ec: 0,
-      ph: 0,
+      ph: 0.0,
       n: 0,
       p: 0,
       k: 0,
@@ -96,8 +96,9 @@ class IotController extends GetxController {
   Timer? _phDownDebounce;
   Timer? _phUpDebounce;
   Timer? _pumpDebounce;
+  Timer? _aiRevertTimer;
 
-  // Reset all actuators to 0
+  // Reset all actuators to 0 (Instant)
   Future<void> resetAllActuators() async {
     await setLampValue(0);
     await setPhDownValue(0);
@@ -113,6 +114,41 @@ class IotController extends GetxController {
       icon: const Icon(Icons.restart_alt, color: Colors.white),
       duration: const Duration(seconds: 2),
     );
+  }
+
+  // Gradual reset to avoid sudden hardware power drop (reduces by 20% every 500ms)
+  Future<void> gradualResetAllActuators() async {
+    bool hasValueGreaterThanZero = true;
+
+    while (hasValueGreaterThanZero) {
+      int newLamp = (controlData.value.lampu - 20).clamp(0, 100).toInt();
+      int newPhDown = (controlData.value.phdown - 20).clamp(0, 100).toInt();
+      int newPhUp = (controlData.value.phup - 20).clamp(0, 100).toInt();
+      int newPump = (controlData.value.pompa - 20).clamp(0, 100).toInt();
+
+      // Update local state instantly for UI
+      controlData.value = ControlData(
+        lampu: newLamp,
+        phdown: newPhDown,
+        phup: newPhUp,
+        pompa: newPump,
+      );
+
+      // Update Firebase directly (bypassing the 300ms debounce of normal setters)
+      await FirebaseDatabase.instance.ref('AKTUATOR').update({
+        'lampu': newLamp,
+        'phdown': newPhDown,
+        'phup': newPhUp,
+        'pompa': newPump,
+      });
+
+      if (newLamp == 0 && newPhDown == 0 && newPhUp == 0 && newPump == 0) {
+        hasValueGreaterThanZero = false;
+      } else {
+        // Wait 500ms before taking the next step down
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+    }
   }
 
   @override
@@ -156,7 +192,13 @@ class IotController extends GetxController {
         print('📦 Raw data: ${event.snapshot.value}');
         final data = event.snapshot.value as Map<dynamic, dynamic>;
         print('📊 Parsed data: $data');
-        sensorData.value = SensorData.fromJson(data);
+        try {
+          sensorData.value = SensorData.fromJson(data);
+          print('✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
+        } catch (e, stacktrace) {
+          print('❌ CRASH IN SENSOR PARSING: $e');
+          print('StackTrace: $stacktrace');
+        }
         print(
             '✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
       } else {
@@ -168,7 +210,11 @@ class IotController extends GetxController {
     FirebaseDatabase.instance.ref('AKTUATOR').onValue.listen((event) {
       if (event.snapshot.value != null) {
         final data = event.snapshot.value as Map<dynamic, dynamic>;
-        controlData.value = ControlData.fromJson(data);
+        try {
+          controlData.value = ControlData.fromJson(data);
+        } catch (e) {
+          print('❌ CRASH IN ACTUATOR PARSING: $e');
+        }
       }
     });
 
@@ -461,7 +507,7 @@ class IotController extends GetxController {
   double get soilHumidity => sensorData.value.sensorT.hum;
   double get soilTemp => sensorData.value.sensorT.temp;
   int get soilEC => sensorData.value.sensorT.ec;
-  int get soilPH => sensorData.value.sensorT.ph;
+  double get soilPH => sensorData.value.sensorT.ph;
   int get soilN => sensorData.value.sensorT.n;
   int get soilP => sensorData.value.sensorT.p;
   int get soilK => sensorData.value.sensorT.k;
@@ -543,6 +589,7 @@ class IotController extends GetxController {
   @override
   void onClose() {
     pumpTimer?.cancel();
+    _aiRevertTimer?.cancel();
     super.onClose();
   }
 
@@ -704,16 +751,37 @@ class IotController extends GetxController {
 
     Get.back(); // Close AI suggestion dialog
 
+    // Cancel old timer if exists
+    _aiRevertTimer?.cancel();
+
     // Show success message
     Get.snackbar(
       'Applied',
-      'AI suggestions applied successfully!',
+      'AI suggestions applied. Running for ${suggestion.durationSeconds} seconds.',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
       colorText: Colors.white,
       icon: const Icon(Icons.check_circle, color: Colors.white),
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
     );
+
+    // Set timer to revert actuators
+    if (suggestion.durationSeconds > 0) {
+      _aiRevertTimer = Timer(Duration(seconds: suggestion.durationSeconds), () async {
+        await gradualResetAllActuators();
+        
+        // Show reset completed message if needed
+        Get.snackbar(
+          'AI Process Finished',
+          'Actuators have been gradually reset to 0.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.blue,
+          colorText: Colors.white,
+          icon: const Icon(Icons.info, color: Colors.white),
+          duration: const Duration(seconds: 2),
+        );
+      });
+    }
 
     // Reopen actuator dialog after a short delay
     await Future.delayed(const Duration(milliseconds: 300));

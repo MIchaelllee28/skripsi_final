@@ -6,6 +6,7 @@ class ActuatorSuggestion {
   final int phdown;
   final int phup;
   final int pompa;
+  final int durationSeconds;
   final String reason;
 
   ActuatorSuggestion({
@@ -13,6 +14,7 @@ class ActuatorSuggestion {
     required this.phdown,
     required this.phup,
     required this.pompa,
+    required this.durationSeconds,
     required this.reason,
   });
 
@@ -22,6 +24,7 @@ class ActuatorSuggestion {
       phdown: json['phdown'] ?? 0,
       phup: json['phup'] ?? 0,
       pompa: json['pompa'] ?? 0,
+      durationSeconds: json['duration_seconds'] ?? 5,
       reason: json['reason'] ?? 'No reason provided',
     );
   }
@@ -29,7 +32,7 @@ class ActuatorSuggestion {
 
 class GeminiService {
   // TODO: Replace with your actual Gemini API key from https://aistudio.google.com/app/apikey
-  static const String apiKey = 'AIzaSyDYLwkEfcBlnqr26uiQ5sveB1rTku4vdLU';
+  static const String apiKey = 'AIzaSyDSuQaj8xVGWQ1kWXaURMG1NT1n1Wp-FZc';
 
   // Test method to check API key and list models
   static Future<void> testApiKey() async {
@@ -53,7 +56,7 @@ class GeminiService {
   static Future<ActuatorSuggestion?> getActuatorSuggestions({
     required double soilHumidity,
     required double soilTemp,
-    required int soilPH,
+    required double soilPH,
     required int soilEC,
     required int soilN,
     required int soilP,
@@ -92,10 +95,21 @@ INSTRUCTIONS:
 2. Suggest gradual adjustments (avoid extreme changes)
 3. Consider plant health and safety
 4. If conditions are good, suggest minimal or no changes
-5. Provide clear reasoning for your suggestions
+5. Provide a very short, compact reason (max 1 sentence) for your actions.
+6. Specify duration_seconds (1-30) for how long these settings should run before turning off. If no action needed, duration_seconds is 0.
+7. HARDWARE SAFETY NOTE: To prevent inductive kickback, the actuators will automatically fade down by 20% every 0.5s at the end of your duration_seconds until they hit 0. Please consider this extra fade-out volume delivery in your time calculations.
+
+BEHAVIORAL REFERENCES (Use these as examples to scale your response dynamically):
+- As conditions approach Ideal (Hum ~70%, pH ~6.2), gracefully scale down actuators towards OFF (0s).
+- For slight deviations (e.g. Hum ~55%, or pH ~5.0 / 7.0), use low intensity (e.g. 20-40) and short durations (3-4s).
+- For moderate deviations (e.g. Hum ~40%, or pH ~4.8 / 7.5), use medium intensity (e.g. 40-70) and moderate durations (6-8s).
+- For extreme deviations (e.g. Hum <=25%, or pH <=3.5 / >=8.5), use high intensity (e.g. 80-100) and long durations (10-15s).
+- If multiple boundaries are crossed (e.g. Dry & Acidic), activate both Pump and the appropriate pH adjustment pump together.
+- Safety / Out of bounds: If you detect impossible values (Overflow like 999, negative Underflow, or completely dead sensors at 0), employ extreme fail-safes (e.g. fully OFF if dead sensors, or max corrections for overflow) and state it in the reason.
+- Waterlogging check: If humidity is extremely high (e.g. >=80%), hold the water pump OFF regardless of other variables.
 
 OUTPUT FORMAT (JSON only, no markdown):
-{"lampu": 0-100, "phdown": 0-100, "phup": 0-100, "pompa": 0-100, "reason": "brief explanation of why these values"}''';
+{"lampu": 0-100, "phdown": 0-100, "phup": 0-100, "pompa": 0-100, "duration_seconds": 1-30, "reason": "very short explanation (max 1 sentence)"}''';
 
       // Create Dio instance for Gemini API
       final dio = Dio(

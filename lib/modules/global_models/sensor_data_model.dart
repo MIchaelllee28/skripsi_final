@@ -27,7 +27,7 @@ class SensorT {
   final double hum; // humidity
   final double temp; // temperature
   final int ec; // electrical conductivity
-  final int ph; // acidity
+  final double ph; // acidity
   final int n; // nitrogen
   final int p; // phosphorus
   final int k; // potassium
@@ -44,13 +44,13 @@ class SensorT {
 
   factory SensorT.fromJson(Map<dynamic, dynamic> json) {
     return SensorT(
-      hum: (json['hum'] ?? 0).toDouble(),
-      temp: (json['temp'] ?? 0).toDouble(),
-      ec: json['ec'] ?? 0,
-      ph: json['ph'] ?? 0,
-      n: json['n'] ?? 0,
-      p: json['p'] ?? 0,
-      k: json['k'] ?? 0,
+      hum: (json['hum'] is num ? (json['hum'] as num).toDouble() : 0.0),
+      temp: (json['temp'] is num ? (json['temp'] as num).toDouble() : 0.0),
+      ec: (json['ec'] is num ? (json['ec'] as num).toInt() : 0),
+      ph: (json['ph'] is num ? (json['ph'] as num).toDouble() : 0.0),
+      n: (json['n'] is num ? (json['n'] as num).toInt() : 0),
+      p: (json['p'] is num ? (json['p'] as num).toInt() : 0),
+      k: (json['k'] is num ? (json['k'] as num).toInt() : 0),
     );
   }
 
@@ -83,10 +83,10 @@ class SensorA {
 
   factory SensorA.fromJson(Map<dynamic, dynamic> json) {
     return SensorA(
-      cf: json['cf'] ?? 0,
-      ph: (json['ph'] ?? 0).toDouble(),
-      humid: json['humid'] ?? 0,
-      suhu: (json['suhu'] ?? 0).toDouble(),
+      cf: (json['cf'] is num ? (json['cf'] as num).toInt() : 0),
+      ph: (json['ph'] is num ? (json['ph'] as num).toDouble() : 0.0),
+      humid: (json['humid'] is num ? (json['humid'] as num).toInt() : 0),
+      suhu: (json['suhu'] is num ? (json['suhu'] as num).toDouble() : 0.0),
     );
   }
 
