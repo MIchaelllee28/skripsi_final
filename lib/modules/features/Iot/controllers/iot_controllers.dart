@@ -188,25 +188,9 @@ class IotController extends GetxController {
     //listener for all sensor data
     print('🚀 [DEBUG] Initializing Firebase Sensor Listener on path: ESP32');
     database.onValue.listen((event) {
-<<<<<<< Updated upstream
-      print('🔥 Firebase event received');
-      if (event.snapshot.value != null) {
-        print('📦 Raw data: ${event.snapshot.value}');
-        final data = event.snapshot.value as Map<dynamic, dynamic>;
-        print('📊 Parsed data: $data');
-        try {
-          sensorData.value = SensorData.fromJson(data);
-          print('✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
-        } catch (e, stacktrace) {
-          print('❌ CRASH IN SENSOR PARSING: $e');
-          print('StackTrace: $stacktrace');
-        }
-        print(
-            '✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
-=======
       print('DEBUG: ==========================================');
       print('DEBUG: 🔥 FIREBASE SENSOR EVENT RECEIVED');
-      
+
       if (event.snapshot.exists) {
         final rawValue = event.snapshot.value;
         print('DEBUG: 📦 Snapshot exists: YES');
@@ -218,9 +202,9 @@ class IotController extends GetxController {
             final data = Map<dynamic, dynamic>.from(rawValue as Map);
             print('DEBUG: 📊 Map casting successful');
             print('DEBUG: 📊 Keys in map: ${data.keys.toList()}');
-            
+
             sensorData.value = SensorData.fromJson(data);
-            
+
             print('DEBUG: ✅ SUCCESSFULLY MAPPED TO SENSOR DATA OBJECT');
             print('DEBUG: 🌡️ Temp (Soil): ${sensorData.value.sensorT.temp}');
             print('DEBUG: 💧 Hum (Soil): ${sensorData.value.sensorT.hum}');
@@ -229,9 +213,9 @@ class IotController extends GetxController {
             print('DEBUG: 📚 STACKTRACE: $stacktrace');
           }
         } else {
-          print('DEBUG: ❌ RAW VALUE IS NULL DESPITE SNAPSHOT.EXISTS BEING TRUE');
+          print(
+              'DEBUG: ❌ RAW VALUE IS NULL DESPITE SNAPSHOT.EXISTS BEING TRUE');
         }
->>>>>>> Stashed changes
       } else {
         print('DEBUG: ❌ SNAPSHOT DOES NOT EXIST (PATH IS EMPTY)');
         print('DEBUG: 📍 Path Checked: ${database.path}');
@@ -800,9 +784,10 @@ class IotController extends GetxController {
 
     // Set timer to revert actuators
     if (suggestion.durationSeconds > 0) {
-      _aiRevertTimer = Timer(Duration(seconds: suggestion.durationSeconds), () async {
+      _aiRevertTimer =
+          Timer(Duration(seconds: suggestion.durationSeconds), () async {
         await gradualResetAllActuators();
-        
+
         // Show reset completed message if needed
         Get.snackbar(
           'AI Process Finished',
