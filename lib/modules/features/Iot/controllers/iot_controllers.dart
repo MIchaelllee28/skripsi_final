@@ -162,10 +162,10 @@ class IotController extends GetxController {
     await _initializeDefaultSettings();
 
     iotLogic.value = HiveService.to.iotLogicBox.get('iot_logic') ?? {};
-    coinValue.value = iotLogic['coin'];
+    coinValue.value = iotLogic['coin'] ?? 0;
     waterCount.value = iotLogic['water_count'] ?? 1;
     lastWaterStamp = iotLogic['water_stamp'] != null
-        ? DateTime.tryParse(iotLogic['water_stamp'])
+        ? DateTime.tryParse(iotLogic['water_stamp'].toString())
         : null;
     getBackgroundColor();
     getPotSkin();
@@ -186,7 +186,9 @@ class IotController extends GetxController {
     getMusic();
 
     //listener for all sensor data
+    print('🚀 [DEBUG] Initializing Firebase Sensor Listener on path: ESP32');
     database.onValue.listen((event) {
+<<<<<<< Updated upstream
       print('🔥 Firebase event received');
       if (event.snapshot.value != null) {
         print('📦 Raw data: ${event.snapshot.value}');
@@ -201,9 +203,40 @@ class IotController extends GetxController {
         }
         print(
             '✅ SensorData updated: hum=${sensorData.value.sensorT.hum}, temp=${sensorData.value.sensorT.temp}');
+=======
+      print('DEBUG: ==========================================');
+      print('DEBUG: 🔥 FIREBASE SENSOR EVENT RECEIVED');
+      
+      if (event.snapshot.exists) {
+        final rawValue = event.snapshot.value;
+        print('DEBUG: 📦 Snapshot exists: YES');
+        print('DEBUG: 📦 Full Raw Value: $rawValue');
+        print('DEBUG: 📦 Type of value: ${rawValue.runtimeType}');
+
+        if (rawValue != null) {
+          try {
+            final data = Map<dynamic, dynamic>.from(rawValue as Map);
+            print('DEBUG: 📊 Map casting successful');
+            print('DEBUG: 📊 Keys in map: ${data.keys.toList()}');
+            
+            sensorData.value = SensorData.fromJson(data);
+            
+            print('DEBUG: ✅ SUCCESSFULLY MAPPED TO SENSOR DATA OBJECT');
+            print('DEBUG: 🌡️ Temp (Soil): ${sensorData.value.sensorT.temp}');
+            print('DEBUG: 💧 Hum (Soil): ${sensorData.value.sensorT.hum}');
+          } catch (e, stacktrace) {
+            print('DEBUG: ❌ ERROR DURING PARSING: $e');
+            print('DEBUG: 📚 STACKTRACE: $stacktrace');
+          }
+        } else {
+          print('DEBUG: ❌ RAW VALUE IS NULL DESPITE SNAPSHOT.EXISTS BEING TRUE');
+        }
+>>>>>>> Stashed changes
       } else {
-        print('❌ Firebase data is null');
+        print('DEBUG: ❌ SNAPSHOT DOES NOT EXIST (PATH IS EMPTY)');
+        print('DEBUG: 📍 Path Checked: ${database.path}');
       }
+      print('DEBUG: ==========================================');
     });
 
     //listener for control data
