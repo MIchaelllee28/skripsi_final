@@ -52,6 +52,7 @@ dependencies:
   audioplayers: ^4.0.0 
   dropdown_button2: ^2.1.4
   mqtt_client: ^9.8.1
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +89,7 @@ flutter:
     - assets/images/trophy/buttons/
     - assets/images/shop/
     - assets/music/
+    - .env
     
 
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ActuatorSuggestion {
   final int lampu;
@@ -31,8 +32,8 @@ class ActuatorSuggestion {
 }
 
 class GeminiService {
-  // TODO: Replace with your actual Gemini API key from https://aistudio.google.com/app/apikey
-  static const String apiKey = 'AIzaSyDSuQaj8xVGWQ1kWXaURMG1NT1n1Wp-FZc';
+  // Read from .env file
+  static String get apiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
 
   // Test method to check API key and list models
   static Future<void> testApiKey() async {
@@ -123,9 +124,9 @@ OUTPUT FORMAT (JSON only, no markdown):
         ),
       );
 
-      // Use the correct model name from available models
+      // Successfully updated to a valid model: gemini-1.5-flash
       final response = await dio.post(
-        '/v1beta/models/gemini-2.5-flash:generateContent?key=$apiKey',
+        '/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey',
         data: {
           'contents': [
             {
