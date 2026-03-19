@@ -761,7 +761,7 @@ class IotController extends GetxController {
   }
 
   Future<void> applyAISuggestion(ActuatorSuggestion suggestion) async {
-    await setLampValue(suggestion.lampu);
+    // await setLampValue(suggestion.lampu);
     await setPhDownValue(suggestion.phdown);
     await setPhUpValue(suggestion.phup);
     await setPumpValue(suggestion.pompa);

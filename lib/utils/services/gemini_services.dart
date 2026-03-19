@@ -86,7 +86,6 @@ Air/Environment:
 - Water pH: $airPH
 
 AVAILABLE ACTUATORS (0-100 scale):
-- lampu: Grow light intensity (0=off, 100=max)
 - phdown: pH down solution pump (lowers pH)
 - phup: pH up solution pump (raises pH)
 - pompa: Water pump for irrigation
@@ -99,18 +98,26 @@ INSTRUCTIONS:
 5. Provide a very short, compact reason (max 1 sentence) for your actions.
 6. Specify duration_seconds (1-30) for how long these settings should run before turning off. If no action needed, duration_seconds is 0.
 7. HARDWARE SAFETY NOTE: To prevent inductive kickback, the actuators will automatically fade down by 20% every 0.5s at the end of your duration_seconds until they hit 0. Please consider this extra fade-out volume delivery in your time calculations.
+8. CONTEXT: pH adjustment (phdown/phup) is for the reservoir and should be suggested regardless of soil humidity.
 
 BEHAVIORAL REFERENCES (Use these as examples to scale your response dynamically):
 - As conditions approach Ideal (Hum ~70%, pH ~6.2), gracefully scale down actuators towards OFF (0s).
 - For slight deviations (e.g. Hum ~55%, or pH ~5.0 / 7.0), use low intensity (e.g. 20-40) and short durations (3-4s).
 - For moderate deviations (e.g. Hum ~40%, or pH ~4.8 / 7.5), use medium intensity (e.g. 40-70) and moderate durations (6-8s).
 - For extreme deviations (e.g. Hum <=25%, or pH <=3.5 / >=8.5), use high intensity (e.g. 80-100) and long durations (10-15s).
-- If multiple boundaries are crossed (e.g. Dry & Acidic), activate both Pump and the appropriate pH adjustment pump together.
+- If all sensor values are all 0, return all actuators to OFF (0s) and state it in the reason.
+- If multiple boundaries are crossed (e.g. Dry & Acidic), activate both Pump and the appropriate pH adjustment pump together, BUT strictly keep their intensity and duration proportional to their individual deviation levels (do not automatically escalate to high/extreme).
 - Safety / Out of bounds: If you detect impossible values (Overflow like 999, negative Underflow, or completely dead sensors at 0), employ extreme fail-safes (e.g. fully OFF if dead sensors, or max corrections for overflow) and state it in the reason.
 - Waterlogging check: If humidity is extremely high (e.g. >=80%), hold the water pump OFF regardless of other variables.
 
+EVALUATION INSTRUCTIONS (STEP-BY-STEP):
+Please evaluate the plant's needs by checking the sensors independently:
+1. Step 1 (Soil Check): Look only at "hum" in "sensorT". If it is below the ideal 60%, the plant is thirsty, and you must activate the Water Pump. Ignore "humid" from sensorA.
+2. Step 2 (Water pH Check): Look only at "ph" in "sensorA". If it is below 5.5, activate pH UP. If it is above 6.5, activate pH DOWN. 
+3. Step 3 (Final Decision): Combine the decisions from Step 1 and Step 2. Do not let the pH condition cancel out the watering need. Assign the intensity and duration based on how far each value deviates from the ideal range.
+
 OUTPUT FORMAT (JSON only, no markdown):
-{"lampu": 0-100, "phdown": 0-100, "phup": 0-100, "pompa": 0-100, "duration_seconds": 1-30, "reason": "very short explanation (max 1 sentence)"}''';
+{"phdown": 0-100, "phup": 0-100, "pompa": 0-100, "duration_seconds": 1-30, "reason": "very short explanation (max 1 sentence)"}''';
 
       // Create Dio instance for Gemini API
       final dio = Dio(
@@ -124,9 +131,9 @@ OUTPUT FORMAT (JSON only, no markdown):
         ),
       );
 
-      // Successfully updated to a valid model: gemini-1.5-flash
+      // Successfully updated to a valid model: gemini-2.5-flash
       final response = await dio.post(
-        '/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey',
+        '/v1beta/models/gemini-2.5-flash:generateContent?key=$apiKey',
         data: {
           'contents': [
             {
