@@ -21,16 +21,16 @@ class NetworkController extends GetxController {
         messageText: const Text(
           'Connect to the internet',
           style: TextStyle(
-            color: Colors.white, // White text color
-            fontWeight: FontWeight.bold, // Bold text for emphasis
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.red, // Red background color
+        backgroundColor: Colors.red,
         isDismissible: false,
         duration: const Duration(days: 1),
-        margin: const EdgeInsets.all(10), // Add margin for better positioning
-        borderRadius: 8, // Rounded corners for a smoother look
-        snackPosition: SnackPosition.BOTTOM, // Position at the bottom
+        margin: const EdgeInsets.all(10),
+        borderRadius: 8,
+        snackPosition: SnackPosition.BOTTOM,
       );
     } else {
       if (Get.isSnackbarOpen) {

@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.0'
+    ext.kotlin_version = '2.1.0'
     repositories {
         google()
         mavenCentral()
@@ -9,7 +9,7 @@ buildscript {
         // START: FlutterFire Configuration
         classpath 'com.google.gms:google-services:4.3.15'
         // END: FlutterFire Configuration
-        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'com.android.tools.build:gradle:8.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -31,6 +31,11 @@ allprojects {
                     jvmTarget = "17"
                 }
             }
+        }
+        // Remove -Werror from all Java compile tasks so obsolete-option warnings
+        // from third-party plugins (e.g. just_audio) don't break the build.
+        project.tasks.withType(JavaCompile).configureEach {
+            options.compilerArgs.remove("-Werror")
         }
     }
 }
