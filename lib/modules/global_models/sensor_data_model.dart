@@ -67,35 +67,27 @@ class SensorT {
   }
 }
 
-// Air/Water Sensor Data
+// Water Sensor Data
 class SensorA {
-  final int cf; // CO2 concentration
+  final int tds; // TDS (reads 'adc' key in Firebase)
   final double ph; // pH
-  final int humid; // humidity
-  final double suhu; // temperature
 
   SensorA({
-    required this.cf,
+    required this.tds,
     required this.ph,
-    required this.humid,
-    required this.suhu,
   });
 
   factory SensorA.fromJson(Map<dynamic, dynamic> json) {
     return SensorA(
-      cf: int.tryParse(json['cf']?.toString() ?? '0') ?? 0,
+      tds: int.tryParse(json['adc']?.toString() ?? '0') ?? 0,
       ph: double.tryParse(json['ph']?.toString() ?? '0') ?? 0.0,
-      humid: int.tryParse(json['humid']?.toString() ?? '0') ?? 0,
-      suhu: double.tryParse(json['suhu']?.toString() ?? '0') ?? 0.0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'cf': cf,
+      'adc': tds,
       'ph': ph,
-      'humid': humid,
-      'suhu': suhu,
     };
   }
 }

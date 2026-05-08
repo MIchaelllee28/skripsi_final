@@ -21,8 +21,6 @@ import 'package:trainee/modules/features/Iot/view/components/ai_loading_dialog.d
 import 'package:trainee/modules/features/Iot/view/components/ai_suggestion_dialog.dart';
 import 'package:trainee/modules/features/Iot/view/components/actuator_dialog.dart';
 
-import '../../shop/view/components/success_dialog.dart';
-import '../view/components/ai_suggestion_dialog.dart';
 
 enum Directions { left, right }
 
@@ -59,10 +57,8 @@ class IotController extends GetxController {
       k: 0,
     ),
     sensorA: SensorA(
-      cf: 0,
+      tds: 0,
       ph: 0,
-      humid: 0,
-      suhu: 0,
     ),
   ).obs;
 
@@ -529,16 +525,14 @@ class IotController extends GetxController {
   int get soilP => sensorData.value.sensorT.p;
   int get soilK => sensorData.value.sensorT.k;
 
-// Getter for air/water sensor (sensorA)
-  int get airCO2 => sensorData.value.sensorA.cf;
-  double get airPH => sensorData.value.sensorA.ph;
-  int get airHumidity => sensorData.value.sensorA.humid;
-  double get airTemp => sensorData.value.sensorA.suhu;
+// Getter for water sensor (sensorA)
+  int get waterTDS => sensorData.value.sensorA.tds;
+  double get waterPH => sensorData.value.sensorA.ph;
 
 // Keep old getters for backward compatibility (temporary)
   int get soilValue1 => soilHumidity.toInt();
   int get tempValue => soilTemp.toInt();
-  bool get liquidValue => airHumidity > 50; // example logic
+  bool get liquidValue => waterTDS > 0;
 
   void addCoins(
       {required int amount, DateTime? dateTime, int? waterCount}) async {
@@ -714,16 +708,9 @@ class IotController extends GetxController {
 
       final suggestion = await GeminiService.getActuatorSuggestions(
         soilHumidity: soilHumidity,
-        soilTemp: soilTemp,
         soilPH: soilPH,
-        soilEC: soilEC,
-        soilN: soilN,
-        soilP: soilP,
-        soilK: soilK,
-        airCO2: airCO2,
-        airHumidity: airHumidity,
-        airTemp: airTemp,
-        airPH: airPH,
+        waterTDS: waterTDS,
+        waterPH: waterPH,
       );
 
       // Close loading dialog
