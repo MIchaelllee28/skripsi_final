@@ -702,10 +702,6 @@ class IotController extends GetxController {
         barrierDismissible: false,
       );
 
-      // Test API key first
-      print('🔍 Testing API key...');
-      await GeminiService.testApiKey();
-
       final suggestion = await GeminiService.getActuatorSuggestions(
         soilHumidity: soilHumidity,
         soilPH: soilPH,
@@ -748,44 +744,99 @@ class IotController extends GetxController {
   }
 
   Future<void> applyAISuggestion(ActuatorSuggestion suggestion) async {
-    // await setLampValue(suggestion.lampu);
-    await setPhDownValue(suggestion.phdown);
-    await setPhUpValue(suggestion.phup);
-    await setPumpValue(suggestion.pompa);
-
     Get.back(); // Close AI suggestion dialog
-
-    // Cancel old timer if exists
     _aiRevertTimer?.cancel();
 
-    // Show success message
-    Get.snackbar(
-      'Applied',
-      'AI suggestions applied. Running for ${suggestion.durationSeconds} seconds.',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      icon: const Icon(Icons.check_circle, color: Colors.white),
-      duration: const Duration(seconds: 3),
-    );
+    if (suggestion.isSequential) {
+      // Sequential: pH correction first, pompa after pH done
+      await setPhDownValue(suggestion.phdown);
+      await setPhUpValue(suggestion.phup);
+      await setPumpValue(0); // Pompa OFF while pH correcting
 
-    // Set timer to revert actuators
-    if (suggestion.durationSeconds > 0) {
-      _aiRevertTimer =
-          Timer(Duration(seconds: suggestion.durationSeconds), () async {
-        await gradualResetAllActuators();
+      final phLabel = suggestion.phup > 0 ? 'pH Up' : 'pH Down';
+      Get.snackbar(
+        'Step 1/2 — pH Correction',
+        '$phLabel running for ${suggestion.durationSeconds}s, then irrigation starts.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.teal,
+        colorText: Colors.white,
+        icon: const Icon(Icons.science, color: Colors.white),
+        duration: const Duration(seconds: 4),
+      );
 
-        // Show reset completed message if needed
+      _aiRevertTimer = Timer(Duration(seconds: suggestion.durationSeconds), () async {
+        // Gradually reset pH actuators only
+        while (controlData.value.phdown > 0 || controlData.value.phup > 0) {
+          final newPhDown = (controlData.value.phdown - 20).clamp(0, 100).toInt();
+          final newPhUp = (controlData.value.phup - 20).clamp(0, 100).toInt();
+          controlData.value = ControlData(
+            lampu: controlData.value.lampu,
+            phdown: newPhDown,
+            phup: newPhUp,
+            pompa: controlData.value.pompa,
+          );
+          await FirebaseDatabase.instance.ref('AKTUATOR').update({'phdown': newPhDown, 'phup': newPhUp});
+          if (newPhDown > 0 || newPhUp > 0) await Future.delayed(const Duration(milliseconds: 500));
+        }
+
+        // Step 2: start irrigation
+        await Future.delayed(const Duration(milliseconds: 500));
+        await setPumpValue(suggestion.pompa);
+
         Get.snackbar(
-          'AI Process Finished',
-          'Actuators have been gradually reset to 0.',
+          'Step 2/2 — Irrigation',
+          'Pump running for ${suggestion.pompaDurationSeconds}s.',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.blue,
           colorText: Colors.white,
-          icon: const Icon(Icons.info, color: Colors.white),
-          duration: const Duration(seconds: 2),
+          icon: const Icon(Icons.water_drop, color: Colors.white),
+          duration: const Duration(seconds: 4),
         );
+
+        _aiRevertTimer = Timer(Duration(seconds: suggestion.pompaDurationSeconds), () async {
+          await gradualResetAllActuators();
+          Get.snackbar(
+            'AI Process Finished',
+            'pH corrected and soil irrigated successfully.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+            duration: const Duration(seconds: 3),
+          );
+        });
       });
+    } else {
+      // Single action: pH only OR irrigation only
+      // await setLampValue(suggestion.lampu);
+      await setPhDownValue(suggestion.phdown);
+      await setPhUpValue(suggestion.phup);
+      await setPumpValue(suggestion.pompa);
+
+      Get.snackbar(
+        'Applied',
+        'AI suggestions applied. Running for ${suggestion.durationSeconds} seconds.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        duration: const Duration(seconds: 3),
+      );
+
+      if (suggestion.durationSeconds > 0) {
+        _aiRevertTimer = Timer(Duration(seconds: suggestion.durationSeconds), () async {
+          await gradualResetAllActuators();
+          Get.snackbar(
+            'AI Process Finished',
+            'Actuators have been gradually reset to 0.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.blue,
+            colorText: Colors.white,
+            icon: const Icon(Icons.info, color: Colors.white),
+            duration: const Duration(seconds: 2),
+          );
+        });
+      }
     }
 
     // Reopen actuator dialog after a short delay

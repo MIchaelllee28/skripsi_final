@@ -79,14 +79,14 @@ class SensorA {
 
   factory SensorA.fromJson(Map<dynamic, dynamic> json) {
     return SensorA(
-      tds: int.tryParse(json['adc']?.toString() ?? '0') ?? 0,
+      tds: int.tryParse(json['tds']?.toString() ?? '0') ?? 0,
       ph: double.tryParse(json['ph']?.toString() ?? '0') ?? 0.0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'adc': tds,
+      'tds': tds,
       'ph': ph,
     };
   }
