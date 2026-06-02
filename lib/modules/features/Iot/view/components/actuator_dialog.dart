@@ -289,6 +289,8 @@ class ActuatorControlDialog extends StatelessWidget {
     required IotController controller,
     required int Function() getValue,
     required Function(double) onChanged,
+    int maxValue = 100,
+    String unit = '%',
   }) {
     return Obx(() {
       final value = getValue();
@@ -397,7 +399,7 @@ class ActuatorControlDialog extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    '$value%',
+                    '$value$unit',
                     style: GoogleTextStyle.fw700.copyWith(
                       fontSize: 20,
                       color: Colors.white,
@@ -427,7 +429,7 @@ class ActuatorControlDialog extends StatelessWidget {
                 ),
                 // Progress fill
                 FractionallySizedBox(
-                  widthFactor: value / 100,
+                  widthFactor: maxValue > 0 ? value / maxValue : 0,
                   child: Container(
                     height: 24,
                     decoration: BoxDecoration(
@@ -460,9 +462,9 @@ class ActuatorControlDialog extends StatelessWidget {
               child: Slider(
                 value: value.toDouble(),
                 min: 0,
-                max: 100,
-                divisions: 20,
-                label: value.toString(),
+                max: maxValue.toDouble(),
+                divisions: maxValue ~/ 10,
+                label: '$value$unit',
                 onChanged: onChanged,
               ),
             ),

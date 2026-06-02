@@ -27,9 +27,9 @@ class ActuatorSuggestion {
   factory ActuatorSuggestion.fromJson(Map<String, dynamic> json) {
     return ActuatorSuggestion(
       lampu: json['lampu'] ?? 0,
-      phdown: (json['phdown'] ?? 0) > 0 ? 20 : 0, // fixed at 20% when active
-      phup: (json['phup'] ?? 0) > 0 ? 20 : 0,     // fixed at 20% when active
-      pompa: 80, // fixed at 80% — pump speed is hardware-controlled
+      phdown: (json['phdown'] ?? 0) > 0 ? 40 : 0, // fixed at 40% when active
+      phup: (json['phup'] ?? 0) > 0 ? 40 : 0,     // fixed at 40% when active
+      pompa: 40, // fixed at 40% — pump speed is hardware-controlled
       durationSeconds: json['duration_seconds'] ?? 5,
       pompaDurationSeconds: json['pompa_duration_seconds'] ?? 0,
       reason: json['reason'] ?? 'No reason provided',
@@ -80,9 +80,9 @@ Water Reservoir:
 - pH: $waterPH (optimal: 5.8-6.2)
 
 ACTUATORS (all speeds are FIXED by hardware — only decide ON/OFF and duration):
-- pompa: water pump — FIXED at 80% speed (flow rate = 15.54 ml/s). Do NOT output pompa intensity.
-- phdown: pH-down pump — FIXED at 20% speed (flow rate = 3.79 ml/s). Output 20 if ON, 0 if OFF.
-- phup: pH-up pump — FIXED at 20% speed (flow rate = 3.79 ml/s). Output 20 if ON, 0 if OFF.
+- pompa: water pump — FIXED at 40% speed (flow rate = 3.79 ml/s). Do NOT output pompa intensity.
+- phdown: pH-down pump — FIXED at 40% speed (flow rate = 3.79 ml/s). Output 40 if ON, 0 if OFF.
+- phup: pH-up pump — FIXED at 40% speed (flow rate = 3.79 ml/s). Output 40 if ON, 0 if OFF.
 - Reservoir = 10L. Tube fill time = 5s (liquid only reaches reservoir after 5s of pumping).
 Note: phdown and phup must never both be non-zero at the same time.
 
@@ -90,20 +90,20 @@ HARDWARE NOTE: At the end of duration_seconds, actuators fade down 20% every 0.5
 
 DECISION RULES:
 
-1. IRRIGATION (pompa) — driven by soil humidity. Pump runs at 80% = 15.54 ml/s:
+1. IRRIGATION (pompa) — driven by soil humidity. Pump runs at 40% = 3.79 ml/s:
    - Target zone: 60–75%
-   - 55–60%: pompa_duration_seconds 2–3s (~31–47 ml)
-   - 40–55%: pompa_duration_seconds 5–8s (~78–124 ml)
-   - 25–40%: pompa_duration_seconds 9–13s (~140–202 ml)
-   - <25%: pompa_duration_seconds 14–20s (~217–311 ml)
+   - 55–60%: pompa_duration_seconds 8–12s (~30–45 ml)
+   - 40–55%: pompa_duration_seconds 21–33s (~80–125 ml)
+   - 25–40%: pompa_duration_seconds 37–53s (~140–201 ml)
+   - <25%: pompa_duration_seconds 57–82s (~216–311 ml)
    - ≥75%: pompa OFF → pompa_duration_seconds=0
 
-2. pH ADJUSTMENT (phdown / phup) — driven by water reservoir pH. Pump at 20% = 3.79 ml/s, reservoir = 10L:
+2. pH ADJUSTMENT (phdown / phup) — driven by water reservoir pH. Pump at 40% = 3.79 ml/s, reservoir = 10L:
    - Target zone: 5.8–6.2
    - deviation 0–0.5: duration_seconds 2–3s (~7.6–11.4 ml)
    - deviation 0.5–1.5: duration_seconds 3–5s (~11.4–19 ml)
    - deviation >1.5: duration_seconds 5–7s (~19–26.5 ml)
-   - pH <5.8 → phup=20, phdown=0; pH >6.2 → phdown=20, phup=0
+   - pH <5.8 → phup=40, phdown=0; pH >6.2 → phdown=40, phup=0
    - No pH issue → phdown=0, phup=0, duration_seconds=0
 
 3. TWO-STEP SEQUENCING: If BOTH pH and irrigation are needed, the app runs them sequentially:
@@ -115,7 +115,7 @@ DECISION RULES:
    - All sensors zero OR any<0 OR any≥999 → all OFF, duration_seconds=0, pompa_duration_seconds=0
 
 OUTPUT FORMAT (JSON only, no markdown):
-{"phdown": 0-100, "phup": 0-100, "duration_seconds": 0-30, "pompa_duration_seconds": 0-30, "reason": "one sentence max"}''';
+{"phdown": 0-100, "phup": 0-100, "duration_seconds": 0-30, "pompa_duration_seconds": 0-120, "reason": "one sentence max"}''';
 
       // Create Dio instance for Gemini API
       final dio = Dio(

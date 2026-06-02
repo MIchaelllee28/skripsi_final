@@ -157,6 +157,12 @@ class AISuggestionDialog extends StatelessWidget {
                         icon: Icons.timer,
                         label: 'Auto-reset after ${suggestion.durationSeconds} seconds',
                       ),
+                    ] else if (suggestion.pompaDurationSeconds > 0) ...[
+                      _buildTimerRow(
+                        color: Colors.blue,
+                        icon: Icons.water_drop,
+                        label: 'Auto-reset after ${suggestion.pompaDurationSeconds} seconds',
+                      ),
                     ],
                   ],
                 ),

@@ -103,7 +103,7 @@ class IotController extends GetxController {
 
     Get.snackbar(
       'Reset',
-      'All actuators set to 0%',
+      'All actuators stopped',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.orange,
       colorText: Colors.white,
@@ -112,36 +112,34 @@ class IotController extends GetxController {
     );
   }
 
-  // Gradual reset to avoid sudden hardware power drop (reduces by 20% every 500ms)
+  // Gradual reset for lamp (PWM, 0-100). pH/pump use seconds so reset immediately.
   Future<void> gradualResetAllActuators() async {
-    bool hasValueGreaterThanZero = true;
+    // Immediately zero out seconds-based actuators
+    controlData.value = ControlData(
+      lampu: controlData.value.lampu,
+      phdown: 0,
+      phup: 0,
+      pompa: 0,
+    );
+    await FirebaseDatabase.instance.ref('AKTUATOR').update({
+      'phdown': 0,
+      'phup': 0,
+      'pompa': 0,
+    });
 
-    while (hasValueGreaterThanZero) {
-      int newLamp = (controlData.value.lampu - 20).clamp(0, 100).toInt();
-      int newPhDown = (controlData.value.phdown - 20).clamp(0, 100).toInt();
-      int newPhUp = (controlData.value.phup - 20).clamp(0, 100).toInt();
-      int newPump = (controlData.value.pompa - 20).clamp(0, 100).toInt();
-
-      // Update local state instantly for UI
+    // Gradually step lamp down by 20 every 500ms
+    while (controlData.value.lampu > 0) {
+      final newLamp = (controlData.value.lampu - 20).clamp(0, 100).toInt();
       controlData.value = ControlData(
         lampu: newLamp,
-        phdown: newPhDown,
-        phup: newPhUp,
-        pompa: newPump,
+        phdown: 0,
+        phup: 0,
+        pompa: 0,
       );
-
-      // Update Firebase directly (bypassing the 300ms debounce of normal setters)
-      await FirebaseDatabase.instance.ref('AKTUATOR').update({
-        'lampu': newLamp,
-        'phdown': newPhDown,
-        'phup': newPhUp,
-        'pompa': newPump,
-      });
-
-      if (newLamp == 0 && newPhDown == 0 && newPhUp == 0 && newPump == 0) {
-        hasValueGreaterThanZero = false;
-      } else {
-        // Wait 500ms before taking the next step down
+      await FirebaseDatabase.instance
+          .ref('AKTUATOR')
+          .update({'lampu': newLamp});
+      if (newLamp > 0) {
         await Future.delayed(const Duration(milliseconds: 500));
       }
     }
